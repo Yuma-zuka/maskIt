@@ -4,6 +4,8 @@ import imagerecpro
 import movierecpro
 import recyunet # type: ignore
 
+
+
 class Homewindow:
     def __init__(self):
         self.root = tk.Tk()
@@ -27,15 +29,19 @@ class Homewindow:
         self.root.mainloop()
 
     def do_registration_process(self):
+        self.root.withdraw()
         registration = save_dictionary.Dictionary()
         registration.recSave("/Users/yuma/opencv/yumaFace2.png")
     def do_imagerecpro(self):
+        self.root.withdraw()
         imagerp = imagerecpro.ImageRecPro()
         imagerp.rec_image()
     def do_movierecpro(self):
+        self.root.withdraw()
         movierp = movierecpro.MovieRecPro()
         movierp.movierecpro()
     def do_real_time_rec(self):
+        self.root.withdraw()
         realtimerp = recyunet.RealTimeRec()
         realtimerp.rec_real_time()
 

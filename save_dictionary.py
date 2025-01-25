@@ -26,8 +26,8 @@ class Dictionary:
             guihome.Homewindow()
 
 
-    def recSave(self, image):
-        recimage = cv2.imread(image)
+    def recSave(self, image_path):
+        recimage = cv2.imread(image_path)
         # 画像サイズの取得
         height, width, _ = recimage.shape
         self.face_detector.setInputSize((width, height))
@@ -39,10 +39,11 @@ class Dictionary:
         # 特徴量の抽出
         face_feature = self.face_recognizer.feature(aligned_face)
         # outputするファイル名を取得するファイル名から取ってくるように変更する
-        np.save("/Users/yuma/opencv/recproApplication/features/yuma2.npy", face_feature)
+        save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
+        save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
+        np.save(save_path, face_feature)
     
 
 
 if __name__ == "__main__":
     save_data = Dictionary()
-    save_data.recSave("/Users/yuma/opencv/yumaFace2.png")

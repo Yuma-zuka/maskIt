@@ -3,6 +3,7 @@ import cv2
 import tkinter as tk
 import tkinter.filedialog, tkinter.messagebox
 import os
+import guihome #type: ignore
 
 #複数のsampleを入れれるようにする
 # recimage = cv2.imread("/Users/yuma/opencv/yumaFace.JPG")
@@ -24,7 +25,10 @@ class Dictionary:
         self.userDirectry = os.path.expanduser("~")
         tkinter.messagebox.showinfo('','処理ファイルを選択')
         self.file = tkinter.filedialog.askopenfilename(filetypes = self.file_Type,initialdir = self.userDirectry)
-        self.recSave(self.file)
+        if (self.file != ""):
+            self.recSave(self.file)
+        else:
+            guihome.Homewindow()
 
 
     def recSave(self, image):

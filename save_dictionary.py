@@ -23,9 +23,8 @@ class Dictionary:
         # 表示する初期ディレクトリーを指定する
         self.userDirectry = os.path.expanduser("~")
         tkinter.messagebox.showinfo('','処理ファイルを選択')
-        self.file = tkinter.filedialog.askopenfilenames(filetypes = self.file_Type,initialdir = self.userDirectry)
-        self.list = list(self.file)
-        # tkinter.messagebox.showinfo('○×プログラム',self.list)
+        self.file = tkinter.filedialog.askopenfilename(filetypes = self.file_Type,initialdir = self.userDirectry)
+        self.recSave(self.file)
 
 
     def recSave(self, image):

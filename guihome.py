@@ -1,8 +1,8 @@
 import tkinter as tk
-import save_dictionary # type: ignore
+import save_dictionary
 import imagerecpro
 import movierecpro
-import recyunet # type: ignore
+import recyunet
 
 
 

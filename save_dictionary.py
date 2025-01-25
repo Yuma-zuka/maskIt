@@ -5,11 +5,6 @@ import tkinter.filedialog, tkinter.messagebox
 import os
 import guihome #type: ignore
 
-#複数のsampleを入れれるようにする
-# recimage = cv2.imread("/Users/yuma/opencv/yumaFace.JPG")
-# recimage2 = cv2.imread("/Users/yuma/opencv/uchidaFace.png")
-
-
 class Dictionary:
     def __init__(self):
 

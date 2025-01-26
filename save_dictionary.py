@@ -34,7 +34,9 @@ class Register:
                 save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
             save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
             np.save(save_path, face_feature)
+            self.make_result_window()
 
+    def make_result_window(self):
         # ウィンドウの作成
         self.root = tk.Tk()
         self.root.title("register")

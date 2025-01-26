@@ -12,31 +12,37 @@ class Register:
         self.face_recognizer = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
 
     def recSave(self, image_path):
-        recimage = cv2.imread(image_path)
-        # 画像サイズの取得
-        height, width, _ = recimage.shape
-        self.face_detector.setInputSize((width, height))
+        try:
+            recimage = cv2.imread(image_path)
+            # 画像サイズの取得
+            height, width, _ = recimage.shape
+            self.face_detector.setInputSize((width, height))
+            try:
+                # 顔を検出する
+                _, faces = self.face_detector.detect(recimage)
+                menbers = 0
+                for face in faces:
+                    # 顔を切り抜き特徴を抽出する
+                    aligned_face = self.face_recognizer.alignCrop(recimage, face)
+                    # 特徴量の抽出
+                    face_feature = self.face_recognizer.feature(aligned_face)
+                    # 画像に含まれている顔の数が複数あればファイル名に数字をつける
+                    # outputするファイル名を取得するファイル名から取ってくる
+                    if len(faces) > 1:
+                        menbers += 1
+                        save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + f"{menbers:d}.npy"
+                    elif len(faces) == 1:
+                        save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
+                    save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
+                    np.save(save_path, face_feature)
+                    self.make_result_window(False)
+            except:
+                self.make_result_window("顔を検出できませんでした")
+        except:
+            self.make_result_window("画像の読み取りに失敗しました")
 
-        # 顔を検出する
-        _, faces = self.face_detector.detect(recimage)
-        menbers = 0
-        for face in faces:
-            # 顔を切り抜き特徴を抽出する
-            aligned_face = self.face_recognizer.alignCrop(recimage, face)
-            # 特徴量の抽出
-            face_feature = self.face_recognizer.feature(aligned_face)
-            # 画像に含まれている顔の数が複数あればファイル名に数字をつける
-            # outputするファイル名を取得するファイル名から取ってくる
-            if len(faces) > 1:
-                menbers += 1
-                save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + f"{menbers:d}.npy"
-            elif len(faces) == 1:
-                save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
-            save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
-            np.save(save_path, face_feature)
-            self.make_result_window()
 
-    def make_result_window(self):
+    def make_result_window(self,error):
         # ウィンドウの作成
         self.root = tk.Tk()
         self.root.title("register")
@@ -45,7 +51,16 @@ class Register:
         back_button.place(x=20,y=730)
         retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 30))
         retry.place(x=730,y=730)
+        if error == False:
+            # 検出できた時に検出した顔を枠で取って、名前をつけて表示する
+            print("success")
+        else:
+            self.set_error_message(error)
         self.root.mainloop()
+
+    def set_error_message(self,error_type):
+        error_message = tk.Label(self.root, text=error_type, font=("Helvetica", 60))
+        error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     
     def back_home(self):
         self.root.destroy()

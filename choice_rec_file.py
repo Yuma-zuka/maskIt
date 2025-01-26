@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.filedialog, tkinter.messagebox
 import os
 import save_dictionary
+import guihome # type: ignore
 
 class Dictionary:
     def __init__(self):
@@ -17,7 +18,7 @@ class Dictionary:
         if (self.file != ""):
             save_file.recSave(self.file)
         else:
-            save_file.back_home()
+            guihome.Homewindow()
 
 if __name__ == "__main__":
     save_data = Dictionary()

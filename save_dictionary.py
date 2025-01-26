@@ -46,8 +46,10 @@ class Register:
             np.save(save_path, face_feature)
     
     def back_home(self):
+        self.root.destroy()
         guihome.Homewindow()
     def register(self):
+        self.root.destroy()
         choice_rec_file.Dictionary()
 
 if __name__ == "__main__":

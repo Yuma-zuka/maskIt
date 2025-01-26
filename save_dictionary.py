@@ -34,14 +34,21 @@ class Dictionary:
 
         # 顔を検出する
         _, faces = self.face_detector.detect(recimage)
-        # 顔を切り抜き特徴を抽出する
-        aligned_face = self.face_recognizer.alignCrop(recimage, faces)
-        # 特徴量の抽出
-        face_feature = self.face_recognizer.feature(aligned_face)
-        # outputするファイル名を取得するファイル名から取ってくるように変更する
-        save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
-        save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
-        np.save(save_path, face_feature)
+        menbers = 0
+        for face in faces:
+            # 顔を切り抜き特徴を抽出する
+            aligned_face = self.face_recognizer.alignCrop(recimage, face)
+            # 特徴量の抽出
+            face_feature = self.face_recognizer.feature(aligned_face)
+            # 画像に含まれている顔の数が複数あればファイル名に数字をつける
+            # outputするファイル名を取得するファイル名から取ってくる
+            if len(faces) > 1:
+                menbers += 1
+                save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + f"{menbers:d}.npy"
+            elif len(faces) == 1:
+                save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
+            save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
+            np.save(save_path, face_feature)
     
 
 

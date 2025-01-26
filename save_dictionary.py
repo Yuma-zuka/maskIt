@@ -23,10 +23,21 @@ class Dictionary:
         if (self.file != ""):
             self.recSave(self.file)
         else:
-            guihome.Homewindow()
+            self.back_home
 
 
     def recSave(self, image_path):
+        # ウィンドウの作成
+        root = tk.Tk()
+        root.title("register")
+        root.geometry("1000x800+200+50")
+        back_button = tk.Button(root, text="戻る", command=self.back_home, font=("Helvetica", 30))
+        back_button.place(x=20,y=730)
+        retry = tk.Button(root, text="続けて登録する", command=self.back_home, font=("Helvetica", 30))
+        retry.place(x=730,y=730)
+        root.mainloop()
+
+
         recimage = cv2.imread(image_path)
         # 画像サイズの取得
         height, width, _ = recimage.shape
@@ -50,6 +61,8 @@ class Dictionary:
             save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
             np.save(save_path, face_feature)
     
+    def back_home(self):
+        guihome.Homewindow()
 
 
 if __name__ == "__main__":

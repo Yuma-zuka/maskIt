@@ -12,16 +12,6 @@ class Register:
         self.face_recognizer = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
 
     def recSave(self, image_path):
-        # ウィンドウの作成
-        self.root = tk.Tk()
-        self.root.title("register")
-        self.root.geometry("1000x800+200+50")
-        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 30))
-        back_button.place(x=20,y=730)
-        retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 30))
-        retry.place(x=730,y=730)
-        self.root.mainloop()
-
         recimage = cv2.imread(image_path)
         # 画像サイズの取得
         height, width, _ = recimage.shape
@@ -44,6 +34,16 @@ class Register:
                 save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
             save_path = os.path.join("/Users/yuma/opencv/recproApplication/features", save_file_name)
             np.save(save_path, face_feature)
+
+        # ウィンドウの作成
+        self.root = tk.Tk()
+        self.root.title("register")
+        self.root.geometry("1000x800+200+50")
+        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 30))
+        back_button.place(x=20,y=730)
+        retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 30))
+        retry.place(x=730,y=730)
+        self.root.mainloop()
     
     def back_home(self):
         self.root.destroy()

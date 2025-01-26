@@ -1,42 +1,25 @@
 import numpy as np
 import cv2
 import tkinter as tk
-import tkinter.filedialog, tkinter.messagebox
 import os
 import guihome #type: ignore
 
-class Dictionary:
+class Register:
     def __init__(self):
-
         self.face_detector = cv2.FaceDetectorYN_create("/Users/yuma/opencv/yunet_n_640_640.onnx", "", (320, 320))
         # FaceRecognizerSF の生成
         self.face_recognizer = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
 
-        self.root = tk.Tk()
-        self.root.withdraw()
-        # 表示するファイルの拡張子を限定する
-        self.file_Type = [("","*.JPG"),("","*.jpeg"),("","*.jpg"),("","*.PNG"),("","*.png"),("","*.HEIC")]
-        # 表示する初期ディレクトリーを指定する
-        self.userDirectry = os.path.expanduser("~")
-        tkinter.messagebox.showinfo('','処理ファイルを選択')
-        self.file = tkinter.filedialog.askopenfilename(filetypes = self.file_Type,initialdir = self.userDirectry)
-        if (self.file != ""):
-            self.recSave(self.file)
-        else:
-            self.back_home
-
-
     def recSave(self, image_path):
         # ウィンドウの作成
-        root = tk.Tk()
-        root.title("register")
-        root.geometry("1000x800+200+50")
-        back_button = tk.Button(root, text="戻る", command=self.back_home, font=("Helvetica", 30))
+        self.root = tk.Tk()
+        self.root.title("register")
+        self.root.geometry("1000x800+200+50")
+        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 30))
         back_button.place(x=20,y=730)
-        retry = tk.Button(root, text="続けて登録する", command=self.back_home, font=("Helvetica", 30))
+        retry = tk.Button(self.root, text="続けて登録する", command=self.back_home, font=("Helvetica", 30))
         retry.place(x=730,y=730)
-        root.mainloop()
-
+        self.root.mainloop()
 
         recimage = cv2.imread(image_path)
         # 画像サイズの取得
@@ -66,4 +49,5 @@ class Dictionary:
 
 
 if __name__ == "__main__":
-    save_data = Dictionary()
+    save_data = Register()
+    save_data.recSave()

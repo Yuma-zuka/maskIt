@@ -1,5 +1,5 @@
 import tkinter as tk
-import save_dictionary
+import choice_rec_file # type: ignore
 import imagerecpro
 import movierecpro
 import recyunet
@@ -30,7 +30,7 @@ class Homewindow:
 
     def do_registration_process(self):
         self.root.withdraw()
-        registration = save_dictionary.Dictionary()
+        registration = choice_rec_file.Dictionary()
         registration.recSave("/Users/yuma/opencv/yumaFace2.png")
     def do_imagerecpro(self):
         self.root.withdraw()

@@ -3,6 +3,7 @@ import cv2
 import tkinter as tk
 import os
 import guihome #type: ignore
+import choice_rec_file # type: ignore
 
 class Register:
     def __init__(self):
@@ -17,7 +18,7 @@ class Register:
         self.root.geometry("1000x800+200+50")
         back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 30))
         back_button.place(x=20,y=730)
-        retry = tk.Button(self.root, text="続けて登録する", command=self.back_home, font=("Helvetica", 30))
+        retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 30))
         retry.place(x=730,y=730)
         self.root.mainloop()
 
@@ -46,7 +47,8 @@ class Register:
     
     def back_home(self):
         guihome.Homewindow()
-
+    def register(self):
+        choice_rec_file.Dictionary()
 
 if __name__ == "__main__":
     save_data = Register()

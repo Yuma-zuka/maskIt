@@ -70,5 +70,4 @@ class Register:
         choice_rec_file.Dictionary()
 
 if __name__ == "__main__":
-    save_data = Register()
-    save_data.recSave()
+    save_data = choice_rec_file.Dictionary()

@@ -29,19 +29,19 @@ class Homewindow:
         self.root.mainloop()
 
     def do_registration_process(self):
-        self.root.withdraw()
+        self.root.destroy()
         registration = choice_rec_file.Dictionary()
         registration.recSave("/Users/yuma/opencv/yumaFace2.png")
     def do_imagerecpro(self):
-        self.root.withdraw()
+        self.root.destroy()
         imagerp = imagerecpro.ImageRecPro()
         imagerp.rec_image()
     def do_movierecpro(self):
-        self.root.withdraw()
+        self.root.destroy()
         movierp = movierecpro.MovieRecPro()
         movierp.movierecpro()
     def do_real_time_rec(self):
-        self.root.withdraw()
+        self.root.destroy()
         realtimerp = recyunet.RealTimeRec()
         realtimerp.rec_real_time()
 

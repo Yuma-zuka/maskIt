@@ -90,7 +90,7 @@ class Register:
             cv2.imwrite(self.temporary_save_path, self.recimage)
             image_tk  = tk.PhotoImage(file=self.temporary_save_path, master=self.root)
             canvas = tk.Canvas(self.root, width=self.recimage.shape[1], height=self.recimage.shape[0]) # Canvas作成
-            canvas.pack(anchor='center', expand=1)
+            canvas.place(x=500, y=360, anchor='center')
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
             os.remove(self.temporary_save_path)
             print("success")
@@ -113,12 +113,13 @@ class Register:
     
     def resize_image(self, subject_image):
         hei, wid, _ = subject_image.shape
-        while wid > 800:
-                subject_image = cv2.resize(subject_image, None, fx=0.9, fy=0.9)
-                wid = subject_image.shape[1]
-        while hei > 640:
-                subject_image = cv2.resize(subject_image, None, fx=0.9, fy=0.9)
-                hei = subject_image.shape[0]
+        if wid > 1000:
+            magnification = 1000 / wid
+            subject_image = cv2.resize(subject_image, None, fx=magnification, fy=magnification, interpolation=cv2.INTER_NEAREST)
+            hei, wid, _ = subject_image.shape
+        if hei > 720:
+            magnification = 720 / hei
+            subject_image = cv2.resize(subject_image, None, fx=magnification, fy=magnification, interpolation=cv2.INTER_NEAREST)
         return subject_image
 
     def back_home(self):

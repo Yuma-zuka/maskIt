@@ -36,7 +36,6 @@ class ImageRecPro:
         self.faces = self.faces if self.faces is not None else []
 
         _idx=0
-        _l=list()
         # 検出した顔のバウンディングボックスとランドマークを描画する
         for face in self.faces:
             #モザイク実行
@@ -51,18 +50,6 @@ class ImageRecPro:
             (x, y, w, h, *_) = map(int, face)
             if result == False:
                 self.image = self.mosaic_area(self.image, x, y, w, h)
-
-            # バウンディングボックス
-            # box = list(map(int, face[:4]))
-            # color = (0, 0, 255)
-            # thickness = 2
-            # cv2.rectangle(image, box, color, thickness, cv2.LINE_AA)
-            # id, score = user if result else ("unknown", 0.0)
-            # text = "{0} ({1:.2f})".format(id, score)
-            # position = (box[0], box[1] - 10)
-            # font = cv2.FONT_HERSHEY_SIMPLEX
-            # scale = 0.6
-            # cv2.putText(image, text, position, font, scale, color, thickness, cv2.LINE_AA)
 
         # 画像の表示
         print(self.savePath)

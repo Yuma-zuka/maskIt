@@ -93,7 +93,6 @@ class Register:
             canvas.place(x=500, y=360, anchor='center')
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
             os.remove(self.temporary_save_path)
-            print("success")
         else:
             self.set_error_message(error)
         self.root.mainloop()

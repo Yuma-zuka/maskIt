@@ -14,8 +14,8 @@ class ImageRecPro:
         self.COSINE_THRESHOLD = 0.363
         self.NORML2_THRESHOLD = 1.128
     
-    def rec_image(self):
-        self.imagePath = "/Users/yuma/opencv/sample.JPG"
+    def rec_image(self, rec_file):
+        self.imagePath = rec_file
         self.imageName = "processed" + str(os.path.split(self.imagePath)[1])
         self.savePath = os.path.join('/Users/yuma/opencv/recproApplication/completeImage', self.imageName)
         self.dictionary = []
@@ -54,7 +54,7 @@ class ImageRecPro:
         # 画像の表示
         print(self.savePath)
         cv2.imwrite(f"{self.savePath}", self.image)
-        cv2.imshow("/Users/yuma/opencv/sample.JPG", self.image)
+        cv2.imshow("編集後", self.image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

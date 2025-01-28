@@ -7,8 +7,8 @@ class MovieRecPro:
         # FaceDetectorYNの生成
         self.FACE_DETECTOR = cv2.FaceDetectorYN_create("/Users/yuma/opencv/yunet_n_640_640.onnx", "", (320, 320))
         
-    def rec_Movie(self):
-        self.video_path = "/Users/yuma/opencv/samplemovie.mp4"
+    def rec_Movie(self, rec_file):
+        self.video_path = rec_file
         self.audio_path = '/Users/yuma/opencv/recproApplication/completevideo/audiosample.mp3'
         self.cap = cv2.VideoCapture(self.video_path)
         self.cap.set(3,640) # set Width

@@ -3,6 +3,7 @@ import choice_rec_file # type: ignore
 import imagerecpro
 import movierecpro
 import recyunet
+from work_enum import Work # type: ignore
 
 
 
@@ -30,16 +31,13 @@ class Homewindow:
 
     def do_registration_process(self):
         self.root.destroy()
-        registration = choice_rec_file.Dictionary()
-        registration.recSave("/Users/yuma/opencv/yumaFace2.png")
+        choice_rec_file.Dictionary(Work.REGISTRATION)
     def do_imagerecpro(self):
         self.root.destroy()
-        imagerp = imagerecpro.ImageRecPro()
-        imagerp.rec_image()
+        choice_rec_file.Dictionary(Work.IMAGE)
     def do_movierecpro(self):
         self.root.destroy()
-        movierp = movierecpro.MovieRecPro()
-        movierp.movierecpro()
+        choice_rec_file.Dictionary(Work.MOVIE)
     def do_real_time_rec(self):
         self.root.destroy()
         realtimerp = recyunet.RealTimeRec()

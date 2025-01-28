@@ -68,13 +68,12 @@ class Register:
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     scale = 0.6
                     cv2.putText(self.recimage, id, position, font, scale, color, thickness, cv2.LINE_AA)
-                    self.recimage = self.resize_image(self.recimage)
-
-                    self.make_result_window(False)
             except:
                 self.make_result_window("顔を検出できませんでした")
         except:
             self.make_result_window("画像の読み取りに失敗しました")
+        self.recimage = self.resize_image(self.recimage)
+        self.make_result_window(False)
 
 
     def make_result_window(self,error):

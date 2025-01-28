@@ -68,7 +68,7 @@ class Register:
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     scale = 0.6
                     cv2.putText(self.recimage, id, position, font, scale, color, thickness, cv2.LINE_AA)
-                    cv2.resize(self.recimage, (800,600))
+                    self.recimage = self.resize_image(self.recimage)
 
                     self.make_result_window(False)
             except:
@@ -90,7 +90,7 @@ class Register:
             # 検出できた時に検出した顔を枠で取って、名前をつけて表示する
             cv2.imwrite(self.temporary_save_path, self.recimage)
             image_tk  = tk.PhotoImage(file=self.temporary_save_path, master=self.root)
-            canvas = tk.Canvas(self.root, width=800, height=600) # Canvas作成
+            canvas = tk.Canvas(self.root, width=self.recimage.shape[1], height=self.recimage.shape[0]) # Canvas作成
             canvas.pack(anchor='center', expand=1)
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
             os.remove(self.temporary_save_path)
@@ -112,6 +112,16 @@ class Register:
                 return True, (userid, score)
         return False, ('unknown', 0.0)
     
+    def resize_image(self, subject_image):
+        hei, wid, _ = subject_image.shape
+        while wid > 800:
+                subject_image = cv2.resize(subject_image, None, fx=0.9, fy=0.9)
+                wid = subject_image.shape[1]
+        while hei > 640:
+                subject_image = cv2.resize(subject_image, None, fx=0.9, fy=0.9)
+                hei = subject_image.shape[0]
+        return subject_image
+
     def back_home(self):
         self.root.destroy()
         guihome.Homewindow()

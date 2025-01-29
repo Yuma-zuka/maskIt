@@ -5,14 +5,13 @@ import os
 import glob
 import guihome #type: ignore
 import choice_rec_file # type: ignore
+from work_enum import Work #type: ignore
 
 class Register:
     def __init__(self):
         self.face_detector = cv2.FaceDetectorYN_create("/Users/yuma/opencv/yunet_n_640_640.onnx", "", (320, 320))
         # FaceRecognizerSF の生成
         self.face_recognizer = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
-
-        self.FEATURES_FILE = glob.glob(os.path.join("/Users/yuma/opencv/recproApplication/features", "*.npy"))
 
         self.temporary_save_path = "/Users/yuma/opencv/recproApplication/features/temporary_save_image.png"
 
@@ -47,6 +46,7 @@ class Register:
 
                     # 登録した顔の特徴データを取得する
                     dictionary = []
+                    self.FEATURES_FILE = glob.glob(os.path.join("/Users/yuma/opencv/recproApplication/features", "*.npy"))
                     for file in self.FEATURES_FILE:
                         feature = np.load(file)
                         user_id = os.path.splitext(os.path.basename(file))[0] # face001.npy -> face001
@@ -126,7 +126,7 @@ class Register:
         guihome.Homewindow()
     def register(self):
         self.root.destroy()
-        choice_rec_file.Dictionary()
+        choice_rec_file.Dictionary(Work.REGISTER)
 
 if __name__ == "__main__":
-    save_data = choice_rec_file.Dictionary()
+    save_data = choice_rec_file.Dictionary(Work.REGISTER)

@@ -31,7 +31,7 @@ class Homewindow:
 
     def do_registration_process(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.REGISTRATION)
+        choice_rec_file.Dictionary(Work.REGISTER)
     def do_imagerecpro(self):
         self.root.destroy()
         choice_rec_file.Dictionary(Work.IMAGE)

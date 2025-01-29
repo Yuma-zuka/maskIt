@@ -12,7 +12,6 @@ class Dictionary:
         self.work = work
         # 表示するファイルの拡張子を限定する
         self.image_extension = [("","*.JPG"),("","*.jpeg"),("","*.jpg"),("","*.PNG"),("","*.png"),("","*.HEIC")]
-        self.movie_extension = [("",".*MP4"),("","*.mp4"),("",".*MOV"),("",".*mov")]
 
         self.root = tk.Tk()
         self.root.withdraw()
@@ -29,7 +28,7 @@ class Dictionary:
                 self.ask_file()
                 save_file = save_dictionary.Register()
                 save_file.recSave(self.file)
-            case Work.MANAGEMENT:
+            case Work.MANAGE:
                 self.file_Type = self.image_extension
                 self.ask_file()
                 # 登録した顔のデータファイルの管理クラスの呼び出し
@@ -38,11 +37,6 @@ class Dictionary:
                 self.ask_file()
                 rec_file = imagerecpro.ImageRecPro()
                 rec_file.rec_image(self.file)
-            case Work.MOVIE:
-                self.file_Type = self.movie_extension
-                self.ask_file()
-                rec_file = movierecpro.MovieRecPro()
-                rec_file.rec_Movie(self.file)
 
     def ask_file (self):
         # 表示する初期ディレクトリーを指定する
@@ -55,4 +49,4 @@ class Dictionary:
 if __name__ == "__main__":
     # save_data = Dictionary(Work.REGISTER)
     # save_data = Dictionary(Work.IMAGE)
-    save_data = Dictionary(Work.MOVIE)
+    save_data = Dictionary(Work.MANAGE)

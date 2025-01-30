@@ -3,6 +3,7 @@ import choice_rec_file # type: ignore
 import imagerecpro
 import movierecpro
 import recyunet
+import management_data
 from work_enum import Work # type: ignore
 
 
@@ -34,7 +35,8 @@ class Homewindow:
         choice_rec_file.Dictionary(Work.REGISTER)
     def do_management(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.MANAGE)
+        management = management_data.ManageData()
+        management.manage()
     def do_imagerecpro(self):
         self.root.destroy()
         choice_rec_file.Dictionary(Work.IMAGE)

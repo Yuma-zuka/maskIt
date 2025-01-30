@@ -12,6 +12,8 @@ class ManageData:
         self.GOMIBAKO_IMAGE = "/Users/yuma/opencv/recproApplication/material/gomibako.png"
         self.YAJIRUSHI_IMAGE = "/Users/yuma/opencv/recproApplication/material/yajirushi.png"
         self.work = None
+    
+    def manage(self):
         self.root = tk.Tk()
         self.root.title("manage")
         self.root.geometry("1440x848+0+0")
@@ -136,5 +138,3 @@ class ManageData:
 # remove, renameの切り替え
 # remove する時の注意画面
 # filedialogのルートディレクトリ固定
-
-test = ManageData()

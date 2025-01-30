@@ -28,10 +28,6 @@ class Dictionary:
                 self.ask_file()
                 save_file = save_dictionary.Register()
                 save_file.recSave(self.file)
-            case Work.MANAGE:
-                self.file_Type = self.image_extension
-                self.ask_file()
-                # 登録した顔のデータファイルの管理クラスの呼び出し
             case Work.IMAGE:
                 self.file_Type = self.image_extension
                 self.ask_file()

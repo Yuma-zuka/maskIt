@@ -18,7 +18,6 @@ class ImageRecPro:
         self.temporary_save_path = "/Users/yuma/opencv/recproApplication/completeImage/temporary_save_image.png"
 
         self.COSINE_THRESHOLD = 0.363
-        self.NORML2_THRESHOLD = 1.128
     
     def rec_image(self, rec_file):
         self.imagePath = rec_file

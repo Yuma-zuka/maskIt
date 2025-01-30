@@ -3,9 +3,9 @@ import cv2
 import tkinter as tk
 import os
 import glob
-import guihome #type: ignore
-import choice_rec_file # type: ignore
-from work_enum import Work #type: ignore
+import guihome
+import choice_rec_file
+from work_enum import Work
 
 class Register:
     def __init__(self):
@@ -16,7 +16,7 @@ class Register:
         self.temporary_save_path = "/Users/yuma/opencv/recproApplication/features/temporary_save_image.png"
 
         self.COSINE_THRESHOLD = 0.363
-        self.NORML2_THRESHOLD = 1.128
+
 
     def recSave(self, image_path):
         try:
@@ -52,11 +52,9 @@ class Register:
                         user_id = os.path.splitext(os.path.basename(file))[0] # face001.npy -> face001
                         dictionary.append((user_id, feature))
 
-                    aligned_face=self.face_recognizer.alignCrop(self.recimage, face)
                     _idx+=1
-                    feature=self.face_recognizer.feature(aligned_face)
                     # 辞書とマッチングする
-                    result, user = self.match(self.face_recognizer, feature, dictionary)
+                    result, user = self.match(self.face_recognizer, face_feature, dictionary)
 
                     # バウンディングボックスと登録したファイル名の表示
                     box = list(map(int, face[:4]))

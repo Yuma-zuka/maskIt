@@ -2,10 +2,9 @@ import tkinter as tk
 import tkinter.filedialog, tkinter.messagebox
 import os
 import save_dictionary
-import guihome # type: ignore
+import guihome
 import imagerecpro
-import movierecpro
-from work_enum import Work #type: ignore
+from work_enum import Work
 
 class Dictionary:
     def __init__(self, work):
@@ -37,7 +36,6 @@ class Dictionary:
     def ask_file (self):
         # 表示する初期ディレクトリーを指定する
         self.userDirectry = os.path.expanduser("~")
-        tkinter.messagebox.showinfo('','処理ファイルを選択')
         self.file = tkinter.filedialog.askopenfilename(filetypes = self.file_Type,initialdir = self.userDirectry)
         if (self.file == ""):
             guihome.Homewindow()

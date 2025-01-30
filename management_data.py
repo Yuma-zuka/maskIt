@@ -1,4 +1,3 @@
-import numpy as np
 import tkinter as tk
 import tkinter.filedialog, tkinter.messagebox
 import os

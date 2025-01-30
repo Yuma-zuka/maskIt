@@ -1,10 +1,8 @@
 import tkinter as tk
-import choice_rec_file # type: ignore
-import imagerecpro
-import movierecpro
+import choice_rec_file
 import recyunet
 import management_data
-from work_enum import Work # type: ignore
+from work_enum import Work
 
 
 

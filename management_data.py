@@ -82,9 +82,7 @@ class ManageData:
 
     def isOk(self, text):
         if not text.encode('utf-8').isalnum():
-            print("error")
             return False
-        print("succ")
         return True
 
 
@@ -128,12 +126,5 @@ class ManageData:
         try:
             self.gomibako_canvas.destroy()
             self.message_box.destroy()
-            print("消したよ")
         except:
             pass
-
-
-# removeの時は複数選択可能
-# remove, renameの切り替え
-# remove する時の注意画面
-# filedialogのルートディレクトリ固定

@@ -56,7 +56,6 @@ class ImageRecPro:
                     self.image = self.mosaic_area(self.image, x, y, w, h)
                 
             # 画像の保存
-            print(self.savePath)
             cv2.imwrite(self.savePath, self.image)
             self.show_image = self.resize_image(self.image)
             cv2.imwrite(self.temporary_save_path, self.show_image)

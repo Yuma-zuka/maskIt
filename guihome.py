@@ -10,7 +10,7 @@ class Homewindow:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("faceMozaicApp")
-        self.root.geometry("1000x800+200+50")
+        self.root.geometry("1440x847+0+0")
         self.root.resizable(False, False)
         self.root.configure(bg="#fafaf2")
 

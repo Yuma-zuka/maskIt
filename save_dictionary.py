@@ -78,17 +78,17 @@ class Register:
         # ウィンドウの作成
         self.root = tk.Tk()
         self.root.title("register")
-        self.root.geometry("1000x800+200+50")
-        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 30))
-        back_button.place(x=20,y=730)
-        retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 30))
-        retry.place(x=730,y=730)
+        self.root.geometry("1440x848+0+0")
+        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 50))
+        back_button.place(x=30,y=740)
+        retry = tk.Button(self.root, text="続けて登録する", command=self.register, font=("Helvetica", 50))
+        retry.place(x=1020,y=740)
         if error == False:
             # 検出できた時に検出した顔を枠で取って、名前をつけて表示する
             cv2.imwrite(self.temporary_save_path, self.recimage)
             image_tk  = tk.PhotoImage(file=self.temporary_save_path, master=self.root)
             canvas = tk.Canvas(self.root, width=self.recimage.shape[1], height=self.recimage.shape[0]) # Canvas作成
-            canvas.place(x=500, y=360, anchor='center')
+            canvas.place(x=720, y=380, anchor='center')
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
             os.remove(self.temporary_save_path)
         else:
@@ -110,12 +110,12 @@ class Register:
     
     def resize_image(self, subject_image):
         hei, wid, _ = subject_image.shape
-        if wid > 1000:
-            magnification = 1000 / wid
+        if wid > 1200:
+            magnification = 1200 / wid
             subject_image = cv2.resize(subject_image, None, fx=magnification, fy=magnification, interpolation=cv2.INTER_NEAREST)
             hei, wid, _ = subject_image.shape
-        if hei > 720:
-            magnification = 720 / hei
+        if hei > 700:
+            magnification = 700 / hei
             subject_image = cv2.resize(subject_image, None, fx=magnification, fy=magnification, interpolation=cv2.INTER_NEAREST)
         return subject_image
 

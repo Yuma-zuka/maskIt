@@ -15,8 +15,8 @@ class RealTimeRec:
 
     def rec_real_time(self):
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(3,1000) # set Width
-        self.cap.set(4,800) # set Height
+        self.cap.set(3,1280) # set Width
+        self.cap.set(4, 720) # set Height
         
 
         # 特徴を読み込む
@@ -29,7 +29,6 @@ class RealTimeRec:
 
         while True:
             ret, img = self.cap.read()
-
             # 画像サイズを設定する
             self.FACE_DETECTOR.setInputSize((img.shape[1], img.shape[0]))
             img = cv2.flip(img, 1)
@@ -62,28 +61,9 @@ class RealTimeRec:
                 position = (box[0], box[1] - 10)
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 scale = 0.6
-                cv2.putText(img, text, position, font, scale, color, thickness, cv2.LINE_AA)
-
-                # ランドマーク（右目、左目、鼻、右口角、左口角）
-                # landmarks = list(map(int, face[4:len(face)-1]))
-                # landmarks = np.array_split(landmarks, len(landmarks) / 2)
-                # for landmark in landmarks:
-                #     radius = 5
-                #     thickness = -1
-                #     cv2.circle(img, landmark, radius, color, thickness, cv2.LINE_AA)
-                    
-                # 信頼度
-                # confidence = face[-1]
-                # confidence = "{:.2f}".format(confidence)
-                # position = (box[0], box[1] - 10)
-                # font = cv2.FONT_HERSHEY_SIMPLEX
-                # scale = 0.5
-                # thickness = 2
-                # cv2.putText(img, confidence, position, font, scale, color, thickness, cv2.LINE_AA)
-                    
-
-            cv2.imshow('video',img[40:760, 60:940])
-            cv2.moveWindow('video', 200, 100)
+                cv2.putText(img, text, position, font, scale, color, thickness, cv2.LINE_AA)                    
+            cv2.imshow('video',img[30:690, 40:1240])
+            cv2.moveWindow('video', 150, 100)
 
             k = cv2.waitKey(30) & 0xff
             if k == 27: # press 'ESC' to quit

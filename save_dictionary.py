@@ -100,13 +100,25 @@ class Register:
         error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     def match(self, recognizer, feature1, dic):
+        hold_userid = ""
+        hold_score = 0
+        matching = False
         for element in dic:
             userid, feature2 = element
             # FaceRecognizerSF でマッチする
             score = recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE)
+            # 一定の一致率を超えたら
             if score > self.COSINE_THRESHOLD:
-                return True, (userid, score)
-        return False, ('unknown', 0.0)
+                matching = True
+                # 以前のスコアより高かったら保持しているスコアとユーザーを上書き
+                if hold_score < score:
+                    hold_score = score
+                    hold_userid = userid
+        # ループの最後まで行ったら実行
+        if matching:
+            return True, (hold_userid, hold_score)
+        else:
+            return False, ('unknown', 0.0)
     
     def resize_image(self, subject_image):
         hei, wid, _ = subject_image.shape

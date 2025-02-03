@@ -87,6 +87,7 @@ class ManageData:
 
 
     def enter_changing(self):
+        self.file = ""
         match self.work:
             case Work.REMOVE:
                 for file in self.file:

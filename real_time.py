@@ -39,6 +39,9 @@ class RealTimeRec(tk.Frame):
         photo_button = tk.Button(self.master, text="写真を撮る", command=self.take_picture, font=("Helvetica", 50))
         photo_button.place(x=1240, y=740, anchor="center")
 
+        self.log_label = tk.Label(self.master, text="写真を保存しました", font=("Helvetica", 50))
+        self.log_label.place_forget()
+
         # カメラをオープンする
         self.capture = cv2.VideoCapture(0)
 
@@ -91,6 +94,14 @@ class RealTimeRec(tk.Frame):
                 canvas_height / 2,
                 image=self.photo_image  # 表示画像データ
                 )
+        
+        try:
+            self.pop_count += 1
+            if self.pop_count == 15:
+                self.log_label.place_forget()
+                self.pop_count = None
+        except:
+            pass
 
         # disp_image()を10msec後に実行する
         self.after(10, self.disp_image)
@@ -124,6 +135,13 @@ class RealTimeRec(tk.Frame):
         picture_file_name = formatted_datetime + ".png"
         picture_path = os.path.join("/Users/yuma/opencv/recproApplication/completeImage", picture_file_name)
         cv2.imwrite(picture_path, self.picture)
+        # 写真を撮ったと表示する
+        self.saved_picture()
+
+    def saved_picture(self):
+        self.log_label.place(x=720, y=660, anchor="center")
+        self.pop_count = 0
+
 
 if __name__ == "__main__":
     root = tk.Tk()

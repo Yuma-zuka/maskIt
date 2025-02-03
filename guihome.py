@@ -1,6 +1,6 @@
 import tkinter as tk
 import choice_rec_file
-import recyunet
+import real_time
 import management_data
 from work_enum import Work
 
@@ -40,8 +40,9 @@ class Homewindow:
         choice_rec_file.Dictionary(Work.IMAGE)
     def do_real_time_rec(self):
         self.root.destroy()
-        realtimerp = recyunet.RealTimeRec()
-        realtimerp.rec_real_time()
+        root = tk.Tk()
+        realtimerp = real_time.RealTimeRec(master = root)
+        realtimerp.mainloop()
 
 if __name__ == "__main__":
     window = Homewindow()

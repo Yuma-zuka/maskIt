@@ -7,7 +7,7 @@ import os
 import time
 import guihome
 
-class Application(tk.Frame):
+class RealTimeRec(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
         self.pack()
@@ -127,5 +127,5 @@ class Application(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = Application(master = root)
+    app = RealTimeRec(master = root)
     app.mainloop()

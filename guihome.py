@@ -40,9 +40,8 @@ class Homewindow:
         choice_rec_file.Dictionary(Work.IMAGE)
     def do_real_time_rec(self):
         self.root.destroy()
-        root = tk.Tk()
-        realtimerp = real_time.RealTimeRec(master = root)
-        realtimerp.mainloop()
+        real_time_rec = real_time.BootRealTime()
+        real_time_rec.boot()
 
 if __name__ == "__main__":
     window = Homewindow()

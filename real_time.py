@@ -6,6 +6,15 @@ import glob
 import os
 import time
 import guihome
+from processing_enum import Processing
+
+class BootRealTime():
+    def __init__(self):
+        pass
+    def boot(self):
+        root = tk.Tk()
+        app = RealTimeRec(master = root)
+        app.mainloop()
 
 class RealTimeRec(tk.Frame):
     def __init__(self, master = None):
@@ -36,11 +45,23 @@ class RealTimeRec(tk.Frame):
         back_button = tk.Button(self.master, text="戻る", command=self.back_home, font=("Helvetica", 50))
         back_button.place(x=120,y=740, anchor="center")
 
+        filter_change_button = tk.Button(self.master, text="フィルター変更", command=self.change_filter, font=("Helvetica", 50))
+        filter_change_button.place(x=400, y=740, anchor="center")
+
+        self.filter_label = tk.Label(self.master, text="MOSAIC", font=("Helvetica", 50))
+        self.filter_label.place(x=800, y=740, anchor="center")
+
         photo_button = tk.Button(self.master, text="写真を撮る", command=self.take_picture, font=("Helvetica", 50))
         photo_button.place(x=1240, y=740, anchor="center")
 
         self.log_label = tk.Label(self.master, text="写真を保存しました", font=("Helvetica", 50))
         self.log_label.place_forget()
+
+        self.GLASSES_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/glasses.png")
+        self.GRASS_CROWN_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/grass_crown.png")
+        self.HEART_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/heart.png")
+        self.ROUND_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/round.png")
+        self.deco = Processing.MOSAIC
 
         # カメラをオープンする
         self.capture = cv2.VideoCapture(0)
@@ -68,8 +89,26 @@ class RealTimeRec(tk.Frame):
             # 辞書とマッチングする
             result, user = self.match(self.FACE_RECOGNIZER, feature, self.dictionary)
             (x, y, w, h, *_) = map(int, face)                   # ③ 検出値はfloat
-            if (result == False):
-                frame = self.mosaic_area(frame, x, y, w, h)
+            # 切り取るサイズの調整
+            if x + w > 1280:
+                w = 1280 - x
+            if y + h > 720:
+                h = 720 - y
+            if (result != True):
+                if self.deco == Processing.MOSAIC:
+                    frame = self.mosaic_area(frame, x, y, w, h)
+                else:
+                    match self.deco:
+                        case Processing.GLASSES:
+                            self.deco_image = self.GLASSES_IMAGE
+                            
+                        case Processing.GRASS_CROWN:
+                            self.deco_image = self.GRASS_CROWN_IMAGE
+                        case Processing.HEART:
+                            self.deco_image = self.HEART_IMAGE
+                        case Processing.ROUND:
+                            self.deco_image = self.ROUND_IMAGE
+                    self.put_pro_image(frame, x, y, w, h)
         self.picture = frame[54:666, 96:1184]
     
         # BGR→RGB変換
@@ -85,15 +124,11 @@ class RealTimeRec(tk.Frame):
         pil_image = ImageOps.pad(pil_image, (canvas_width, canvas_height))
 
         # PIL.ImageからPhotoImageへ変換する
-        self.photo_image = ImageTk.PhotoImage(image=pil_image)
+        self.photo_image = ImageTk.PhotoImage(image=pil_image, master=self.master)
 
         # 画像の描画
         self.canvas.delete("all")
-        self.canvas.create_image(
-                canvas_width / 2,       # 画像表示位置(Canvasの中心)
-                canvas_height / 2,
-                image=self.photo_image  # 表示画像データ
-                )
+        self.canvas.create_image(canvas_width / 2, canvas_height / 2, image=self.photo_image)  # 表示画像データ
         
         try:
             self.pop_count += 1
@@ -138,12 +173,27 @@ class RealTimeRec(tk.Frame):
         # 写真を撮ったと表示する
         self.saved_picture()
 
+    def change_filter(self):
+        self.filter_count = self.deco.value + 1
+        if self.filter_count > 4:
+            self.filter_count = 0
+        self.deco = Processing(self.filter_count)
+        self.filter_label["text"] = self.deco.name
+
+
     def saved_picture(self):
         self.log_label.place(x=720, y=660, anchor="center")
         self.pop_count = 0
 
+    def put_pro_image(self, frame, x, y, w, h):
+        try:
+            deco_cover_image = cv2.resize(self.deco_image, (w,h))
+            transparence = (255,255,255)
+            frame[y:y+h, x:x+w] = np.where(deco_cover_image==transparence, frame[y:y+h, x:x+w], deco_cover_image)
+        except:
+            pass
+
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = RealTimeRec(master = root)
-    app.mainloop()
+    main = BootRealTime()
+    main.boot()

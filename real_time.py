@@ -81,10 +81,8 @@ class RealTimeRec(tk.Frame):
         _, faces = self.FACE_DETECTOR.detect(frame)
         faces = faces if faces is not None else []
 
-        _idx=0
         for face in faces:
             aligned_face=self.FACE_RECOGNIZER.alignCrop(frame, face)
-            _idx+=1
             feature=self.FACE_RECOGNIZER.feature(aligned_face)
             # 辞書とマッチングする
             result, user = self.match(self.FACE_RECOGNIZER, feature, self.dictionary)
@@ -101,7 +99,6 @@ class RealTimeRec(tk.Frame):
                     match self.deco:
                         case Processing.GLASSES:
                             self.deco_image = self.GLASSES_IMAGE
-                            
                         case Processing.GRASS_CROWN:
                             self.deco_image = self.GRASS_CROWN_IMAGE
                         case Processing.HEART:

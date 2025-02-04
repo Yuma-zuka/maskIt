@@ -87,7 +87,6 @@ class ManageData:
 
 
     def enter_changing(self):
-        self.file = ""
         match self.work:
             case Work.REMOVE:
                 for file in self.file:
@@ -110,6 +109,7 @@ class ManageData:
                 else:
                     self.error_label = tk.Label(self.root, fg="#ff0000", text="※半角英数字で入力", font=("Helvetica", 40))
                     self.error_label.place(x=720, y=750, anchor="center")
+        self.file = ""
 
     def back_home(self):
         self.root.destroy()

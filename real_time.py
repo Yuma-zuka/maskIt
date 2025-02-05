@@ -43,16 +43,21 @@ class RealTimeRec(tk.Frame):
         self.canvas.place(x=720, y=320, anchor="center")
 
         back_button = tk.Button(self.master, text="戻る", command=self.back_home, font=("Helvetica", 50))
-        back_button.place(x=120,y=740, anchor="center")
+        back_button.place(x=80,y=740, anchor="center")
 
         filter_change_button = tk.Button(self.master, text="フィルター変更", command=self.change_filter, font=("Helvetica", 50))
-        filter_change_button.place(x=400, y=740, anchor="center")
+        filter_change_button.place(x=350, y=740, anchor="center")
 
         self.filter_label = tk.Label(self.master, text="MOSAIC", font=("Helvetica", 50))
-        self.filter_label.place(x=800, y=740, anchor="center")
+        self.filter_label.place(x=750, y=740, anchor="center")
+
+        self.bool_check = tk.BooleanVar()
+        self.bool_check.set(True)
+        check_box = tk.Checkbutton(self.master, text="顔認証", variable=self.bool_check, font=("Helvetica", 50))
+        check_box.place(x=1040, y=740, anchor="center")
 
         photo_button = tk.Button(self.master, text="写真を撮る", command=self.take_picture, font=("Helvetica", 50))
-        photo_button.place(x=1240, y=740, anchor="center")
+        photo_button.place(x=1280, y=740, anchor="center")
 
         self.log_label = tk.Label(self.master, text="写真を保存しました", font=("Helvetica", 50))
         self.log_label.place_forget()
@@ -82,10 +87,13 @@ class RealTimeRec(tk.Frame):
         faces = faces if faces is not None else []
 
         for face in faces:
-            aligned_face=self.FACE_RECOGNIZER.alignCrop(frame, face)
-            feature=self.FACE_RECOGNIZER.feature(aligned_face)
-            # 辞書とマッチングする
-            result, user = self.match(self.FACE_RECOGNIZER, feature, self.dictionary)
+            if self.bool_check.get():
+                aligned_face=self.FACE_RECOGNIZER.alignCrop(frame, face)
+                feature=self.FACE_RECOGNIZER.feature(aligned_face)
+                # 辞書とマッチングする
+                result, user = self.match(self.FACE_RECOGNIZER, feature, self.dictionary)
+            else:
+                result = False
             (x, y, w, h, *_) = map(int, face)                   # ③ 検出値はfloat
             # 切り取るサイズの調整
             if x + w > 1280:
@@ -176,7 +184,6 @@ class RealTimeRec(tk.Frame):
             self.filter_count = 0
         self.deco = Processing(self.filter_count)
         self.filter_label["text"] = self.deco.name
-
 
     def saved_picture(self):
         self.log_label.place(x=720, y=660, anchor="center")

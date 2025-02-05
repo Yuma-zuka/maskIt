@@ -18,13 +18,8 @@ class ImageRecPro:
         # 表示するための画像を一時的に保存するパス
         self.temporary_save_path = "/Users/yuma/opencv/recproApplication/completeImage/temporary_save_image.png"
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
-        self.COSINE_THRESHOLD = 0.363 
-    
-    # 写真を加工するメソッド
-    def rec_image(self, rec_file):
-        self.imagePath = rec_file # 加工する写真
-        self.imageName = "processed" + str(os.path.splitext(os.path.basename(self.imagePath))[0]) + ".png" # 出力する時のファイル名
-        self.savePath = os.path.join('/Users/yuma/opencv/recproApplication/completeImage', self.imageName) # 出力する時のパス
+        self.COSINE_THRESHOLD = 0.363
+
         self.dictionary = [] # 登録済データを入れる変数
         self.files = glob.glob(os.path.join("/Users/yuma/opencv/recproApplication/features", "*.npy")) # 登録済データファイルの取得
         # データファイルの数だけ読み取って変数に挿入
@@ -32,6 +27,12 @@ class ImageRecPro:
             feature = np.load(file)
             user_id = os.path.splitext(os.path.basename(file))[0] # face001.npy -> face001
             self.dictionary.append((user_id, feature))
+
+    # 写真を加工するメソッド
+    def rec_image(self, rec_file):
+        self.imagePath = rec_file # 加工する写真
+        self.imageName = "processed" + str(os.path.splitext(os.path.basename(self.imagePath))[0]) + ".png" # 出力する時のファイル名
+        self.savePath = os.path.join('/Users/yuma/opencv/recproApplication/completeImage', self.imageName) # 出力する時のパス
 
         try:
             # 画像の読み込み
@@ -41,7 +42,7 @@ class ImageRecPro:
             # 顔検出
             _, self.faces = self.FACE_DETECTOR.detect(self.image)
             self.faces = self.faces if self.faces is not None else [] # 検出できなかったらNoneを定義する
-
+            
             for face in self.faces: # 検出した顔を一つずつ実行
                 # 顔の特徴を抽出
                 aligned_face=self.FACE_RECOGNIZER.alignCrop(self.image, face)
@@ -53,7 +54,7 @@ class ImageRecPro:
                 # 認証できなかった人にモザイクをかける
                 if result == False:
                     self.image = self.mosaic_area(self.image, x, y, w, h) # mosaic_areaメソッドの呼び出し
-                
+            
             # 画像の保存
             cv2.imwrite(self.savePath, self.image)
             # 保存する画像を表示するために表示サイズに加工する
@@ -64,7 +65,7 @@ class ImageRecPro:
             self.make_result_window(None) # make_result_windowメソッドの呼び出し
         except:
             self.make_result_window("画像の読み取りに失敗しました") # make_result_windowメソッドの呼び出し
-
+    
     # 顔認証のメソッド
     def match(self, recognizer, feature1, dic):
         # データの数だけ繰り返す

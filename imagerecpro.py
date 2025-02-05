@@ -65,7 +65,7 @@ class ImageRecPro:
             self.make_result_window(None) # make_result_windowメソッドの呼び出し
         except:
             self.make_result_window("画像の読み取りに失敗しました") # make_result_windowメソッドの呼び出し
-    
+
     # 顔認証のメソッド
     def match(self, recognizer, feature1, dic):
         # データの数だけ繰り返す
@@ -128,7 +128,7 @@ class ImageRecPro:
     # 再び写真を処理するメソッド
     def re_rec_image(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.IMAGE)
+        choice_rec_file.Choices(Work.IMAGE)
 
 if __name__ == "__main__":
-    test = choice_rec_file.Dictionary(Work.IMAGE)
+    test = choice_rec_file.Choices(Work.IMAGE)

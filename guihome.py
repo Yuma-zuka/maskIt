@@ -38,14 +38,14 @@ class Homewindow:
     # ---------------------------- #
     def do_registration_process(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.REGISTER) # 処理するファイルを選択するクラス(登録のための)
+        choice_rec_file.Choices(Work.REGISTER) # 処理するファイルを選択するクラス(登録のための)
     def do_management(self):
         self.root.destroy()
         management = management_data.ManageData() # 登録済データを管理するクラス
         management.manage()
     def do_imagerecpro(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.IMAGE) # 処理するファイルを選択するクラス(写真を処理するための)
+        choice_rec_file.Choices(Work.IMAGE) # 処理するファイルを選択するクラス(写真を処理するための)
     def do_real_time_rec(self):
         self.root.destroy()
         real_time_rec = real_time.BootRealTime() # リアルタイムで処理するクラスを起動するためのクラス

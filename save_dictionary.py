@@ -136,7 +136,7 @@ class Register:
         guihome.Homewindow()
     def register(self):
         self.root.destroy()
-        choice_rec_file.Dictionary(Work.REGISTER)
+        choice_rec_file.Choices(Work.REGISTER)
 
 if __name__ == "__main__":
-    save_data = choice_rec_file.Dictionary(Work.REGISTER)
+    save_data = choice_rec_file.Choices(Work.REGISTER)

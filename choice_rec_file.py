@@ -6,7 +6,7 @@ import guihome
 import imagerecpro
 from work_enum import Work
 
-class Dictionary:
+class Choices:
     def __init__(self, work):
         self.work = work
         # 表示するファイルの拡張子を限定する
@@ -41,6 +41,5 @@ class Dictionary:
             guihome.Homewindow()
 
 if __name__ == "__main__":
-    # save_data = Dictionary(Work.REGISTER)
-    # save_data = Dictionary(Work.IMAGE)
-    save_data = Dictionary(Work.MANAGE)
+    # save_data = Choices(Work.REGISTER)
+    save_data = Choices(Work.IMAGE)

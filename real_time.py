@@ -170,13 +170,16 @@ class RealTimeRec(tk.Frame):
         guihome.Homewindow()
 
     def take_picture(self):
-        current_time = time.localtime()
-        formatted_datetime = time.strftime("%Y-%m-%d %H-%M-%S", current_time)
-        picture_file_name = formatted_datetime + ".png"
-        picture_path = os.path.join("/Users/yuma/opencv/recproApplication/completeImage", picture_file_name)
-        cv2.imwrite(picture_path, self.picture)
-        # 写真を撮ったと表示する
-        self.saved_picture()
+        try:
+            current_time = time.localtime()
+            formatted_datetime = time.strftime("%Y-%m-%d %H-%M-%S", current_time)
+            picture_file_name = formatted_datetime + ".png"
+            picture_path = os.path.join("/Users/yuma/opencv/recproApplication/completeImage", picture_file_name)
+            cv2.imwrite(picture_path, self.picture)
+            # 写真を撮ったと表示する
+            self.saved_picture()
+        except:
+            pass
 
     def change_filter(self):
         self.filter_count = self.deco.value + 1

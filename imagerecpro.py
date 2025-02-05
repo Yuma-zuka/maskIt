@@ -104,6 +104,7 @@ class ImageRecPro:
         self.root = tk.Tk()
         self.root.title("recognize image") # ウィンドウの名前
         self.root.geometry("1440x848+0+0") # ウィンドウサイズと位置
+        self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
         back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
         back_button.place(x=30,y=740) # "戻る"ボタンの配置
         retry = tk.Button(self.root, text="続けて編集する", command=self.re_rec_image, font=("Helvetica", 50)) # 続けて編集するボタンの設定 re_rec_imageメソッドの呼び出し

@@ -15,16 +15,18 @@ class Homewindow:
         self.root.resizable(False, False)
         self.root.configure(bg="#fafaf2")
 
-        self.registration_process_btn = Button(self.root, text="register", command=self.do_registration_process, bg="#1995ad", fg="#537072", font=("Helvetica", 120))
+        FONT = ("Helvetica", 120)
+
+        self.registration_process_btn = Button(self.root, text="register", command=self.do_registration_process, bg="#1995ad", fg="#537072", font=FONT)
         self.registration_process_btn.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
 
-        self.image_process_btn = Button(self.root, text="manage", command=self.do_management, bg="#a1d6e2", fg="#537072", font=("Helvetica", 120))
+        self.image_process_btn = Button(self.root, text="manage", command=self.do_management, bg="#a1d6e2", fg="#537072", font=FONT)
         self.image_process_btn.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
-        self.movie_process_btn = Button(self.root, text="image", command=self.do_imagerecpro, bg="#a1d6e2", fg="#537072",  font=("Helvetica", 120))
+        self.movie_process_btn = Button(self.root, text="image", command=self.do_imagerecpro, bg="#a1d6e2", fg="#537072",  font=FONT)
         self.movie_process_btn.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
-        self.real_time_process_btn = Button(self.root, text="realTime", command=self.do_real_time_rec, bg="#a1d6e2", fg="#537072", font=("Helvetica", 120))
+        self.real_time_process_btn = Button(self.root, text="realTime", command=self.do_real_time_rec, bg="#a1d6e2", fg="#537072", font=FONT)
         self.real_time_process_btn.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
         self.root.mainloop()

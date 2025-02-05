@@ -16,12 +16,17 @@ class ImageRecPro:
         # FaceRecognizerの生成 顔を認識するためのサンプル
         self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
         # 表示するための画像を一時的に保存するパス
-        self.temporary_save_path = "/Users/yuma/opencv/recproApplication/completeImage/temporary_save_image.png"
+        self.TEMPORARY_SAVE_PATH = "/Users/yuma/opencv/recproApplication/completeImage/temporary_save_image.png"
+        # 処理済の画像を保存するディレクトリのパス
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/completeImage"
+        # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
+        self.FEATURES_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/features"
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 
+        # 特徴を読み込む
         self.dictionary = [] # 登録済データを入れる変数
-        self.files = glob.glob(os.path.join("/Users/yuma/opencv/recproApplication/features", "*.npy")) # 登録済データファイルの取得
+        self.files = glob.glob(os.path.join(self.FEATURES_DIRECTRY_PATH, "*.npy")) # 登録済データファイルの取得
         # データファイルの数だけ読み取って変数に挿入
         for file in self.files:
             feature = np.load(file)
@@ -30,13 +35,13 @@ class ImageRecPro:
 
     # 写真を加工するメソッド
     def rec_image(self, rec_file):
-        self.imagePath = rec_file # 加工する写真
-        self.imageName = "processed" + str(os.path.splitext(os.path.basename(self.imagePath))[0]) + ".png" # 出力する時のファイル名
-        self.savePath = os.path.join('/Users/yuma/opencv/recproApplication/completeImage', self.imageName) # 出力する時のパス
+        self.image_path = rec_file # 加工する写真
+        self.image_name = "processed" + str(os.path.splitext(os.path.basename(self.image_path))[0]) + ".png" # 出力する時のファイル名
+        self.save_path = os.path.join(self.COMPLETE_IMAGE_DIRECTRY_PATH, self.image_name) # 出力する時のパス
 
         try:
             # 画像の読み込み
-            self.image = cv2.imread(self.imagePath)
+            self.image = cv2.imread(self.image_path)
             # 画像サイズを設定する
             self.FACE_DETECTOR.setInputSize((self.image.shape[1], self.image.shape[0]))
             # 顔検出
@@ -56,15 +61,16 @@ class ImageRecPro:
                     self.image = self.mosaic_area(self.image, x, y, w, h) # mosaic_areaメソッドの呼び出し
             
             # 画像の保存
-            cv2.imwrite(self.savePath, self.image)
+            cv2.imwrite(self.save_path, self.image)
             # 保存する画像を表示するために表示サイズに加工する
             self.show_image = self.resize_image(self.image) # resize_imageメソッドの呼び出し
             # 画像を表示するために一時的に書き出す
-            cv2.imwrite(self.temporary_save_path, self.show_image)
+            cv2.imwrite(self.TEMPORARY_SAVE_PATH, self.show_image)
             # 画像の表示
             self.make_result_window(None) # make_result_windowメソッドの呼び出し
         except:
             self.make_result_window("画像の読み取りに失敗しました") # make_result_windowメソッドの呼び出し
+
 
     # 顔認証のメソッド
     def match(self, recognizer, feature1, dic):
@@ -73,10 +79,11 @@ class ImageRecPro:
             _, feature2 = element # 登録してある特徴データとユーザー名を取得
             # FaceRecognizerSF でマッチする
             score = recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE) # 2つのデータの近似率を計算 3つ目の引数は計算方法
-            if score > self.COSINE_THRESHOLD: # 一定の一致率を超えたら認証成功とユーザー名と近似率を返す
+            if score > self.COSINE_THRESHOLD: # 一定の一致率を超えたら認証成功を返す
                 return True
-        return False # 超えなかったら認証失敗とunknownと近似率0.0を返す
+        return False # 超えなかったら認証失敗を返す
     
+
     # モザイクをかけるために範囲を指定して上書きするメソッド
     def mosaic_area(self, src, x, y, width, height):
         dst = src.copy()
@@ -87,6 +94,7 @@ class ImageRecPro:
         small = cv2.resize(src, None, fx=ratio, fy=ratio, interpolation=cv2.INTER_NEAREST) # 小さくする 補間でノイズ除去
         return cv2.resize(small, src.shape[:2][::-1], interpolation=cv2.INTER_NEAREST) # 元のサイズに戻して返す 補間でノイズ除去
     
+
     # 画像サイズをちょうど良くする
     def resize_image(self, subject_image):
         hei, wid, _ = subject_image.shape
@@ -99,6 +107,7 @@ class ImageRecPro:
             subject_image = cv2.resize(subject_image, None, fx=magnification, fy=magnification, interpolation=cv2.INTER_NEAREST)
         return subject_image # ちょうどよくした画像を返す
     
+
     # 結果を画面に表示するメソッド
     def make_result_window(self, error):
         # ウィンドウの作成
@@ -110,21 +119,23 @@ class ImageRecPro:
         back_button.place(x=30,y=740) # "戻る"ボタンの配置
         retry = tk.Button(self.root, text="続けて編集する", command=self.re_rec_image, font=("Helvetica", 50)) # 続けて編集するボタンの設定 re_rec_imageメソッドの呼び出し
         retry.place(x=1020,y=740) # "続けて編集する"ボタンの配置
+
         # 結果表示
         if error == None: # errorがなかった時 画像表示
-            image_tk  = tk.PhotoImage(file=self.temporary_save_path, master=self.root) # 表示する画像の取得
+            image_tk  = tk.PhotoImage(file=self.TEMPORARY_SAVE_PATH, master=self.root) # 表示する画像の取得
             canvas = tk.Canvas(self.root, width=self.show_image.shape[1], height=self.show_image.shape[0]) # Canvas作成
             canvas.place(x=720, y=380, anchor='center') # Canvas配置
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
-            os.remove(self.temporary_save_path) # 一時的に保存していた画像の削除
+            os.remove(self.TEMPORARY_SAVE_PATH) # 一時的に保存していた画像の削除
         else: # errorがあった時 エラー文の表示
             error_message = tk.Label(self.root, text=error, font=("Helvetica", 60)) # エラーメッセージのラベル設定
             error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # エラーメッセージの配置
         self.root.mainloop() # ボタンの実行を待機
+
     # ホーム画面に戻るメソッド
     def back_home(self):
         self.root.destroy()
-        guihome.Homewindow()
+        guihome.HomeWindow()
     # 再び写真を処理するメソッド
     def re_rec_image(self):
         self.root.destroy()

@@ -6,7 +6,7 @@ from work_enum import Work
 
 
 # ホーム画面のクラス
-class Homewindow:
+class HomeWindow:
     def __init__(self):
         # ウィンドウの作成
         self.root = tk.Tk()
@@ -52,4 +52,4 @@ class Homewindow:
         real_time_rec.boot()
 
 if __name__ == "__main__":
-    window = Homewindow()
+    window = HomeWindow()

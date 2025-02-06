@@ -118,10 +118,11 @@ class Register:
         self.root = tk.Tk()
         self.root.title("register")  # ウィンドウ名
         self.root.geometry("1440x847+0+0") # ウィンドウサイズ
+        self.root.configure(bg="#f1f1f2") # ウィンドウの背景色
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
-        back_button = Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
+        back_button = Button(self.root, text="戻る", bg="#969696",fg="#ffffff", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
         back_button.place(x=30,y=740) # "戻る"ボタンの配置
-        retry = Button(self.root, text="続けて登録する", command=self.re_regist, font=("Helvetica", 50)) # 続けて登録するボタンの設定 re_registメソッドの呼び出し
+        retry = Button(self.root, text="続けて登録する", bg="#bbdceb", fg="#536f72", command=self.re_regist, font=("Helvetica", 50)) # 続けて登録するボタンの設定 re_registメソッドの呼び出し
         retry.place(x=1020,y=740) # "続けて登録する"ボタンの配置
         # 結果表示
         if error == None: # 検出できた時に検出した顔を枠で取って、名前をつけて表示する

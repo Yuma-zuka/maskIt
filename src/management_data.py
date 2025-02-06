@@ -23,15 +23,15 @@ class ManageData:
         # ウィンドウの作成
         self.root = tk.Tk()
         self.root.title("manage") # ウィンドウ名
-        self.root.geometry("1440x848+0+0") # ウィンドウサイズと位置
+        self.root.geometry("1440x847+0+0") # ウィンドウサイズと位置
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
-        back_button = tk.Button(self.root, text="戻る", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
+        back_button = tk.Button(self.root, text="戻る", bg="#969696",fg="#ffffff", command=self.back_home, font=("Helvetica", 50), relief="raised") # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
         back_button.place(x=30,y=740) # "戻る"ボタンの配置
-        enter = tk.Button(self.root, text="実行", command=self.enter_changing, font=("Helvetica", 50)) # 実行するボタンの設定 enter_changingメソッドの呼び出し
-        enter.place(x=1270,y=740) # "実行"ボタンの配置
-        remove_button = tk.Button(self.root, text="ファイルを削除", command=self.remove_file, font=("Helvetica", 80)) # ファイル削除ボタンの設定 remove_fileメソッドの呼び出し
+        enter = tk.Button(self.root, text="実行", bg="#f0cb45",fg="#ffffff", command=self.enter_changing, font=("Helvetica", 50), relief="raised") # 実行するボタンの設定 enter_changingメソッドの呼び出し
+        enter.place(x=1200,y=740) # "実行"ボタンの配置
+        remove_button = tk.Button(self.root, text="ファイルを削除", bg="#bbdceb", fg="#000000", command=self.remove_file, font=("Helvetica", 80), relief="raised") # ファイル削除ボタンの設定 remove_fileメソッドの呼び出し
         remove_button.place(x=80,y=50) # "ファイルを削除"ボタンの配置
-        rename_button = tk.Button(self.root, text="ファイル名変更", command=self.rename_file, font=("Helvetica", 80)) # ファイル名変更ボタンの設定 rename_fileメソッドの呼び出し
+        rename_button = tk.Button(self.root, text="ファイル名変更", bg="#bbdceb", fg="#000000", command=self.rename_file, font=("Helvetica", 80), relief="raised") # ファイル名変更ボタンの設定 rename_fileメソッドの呼び出し
         rename_button.place(x=760,y=50) # "ファイル名変更"ボタンの配置
 
         self.root.mainloop() # ボタンの実行を待機
@@ -58,7 +58,7 @@ class ManageData:
             self.message_box = tk.Message(self.root, justify="center", width=1300, text=message_files, font=("Helvetica", 30)) # ファイル名を表示するmessageを作成
             self.message_box.place(x=720, y=340, anchor="center") # messageboxの配置
             # ファイルを選択したらゴミ箱を表示する
-            self.gomibako_canvas = tk.Canvas(self.root, width=200, height=300) # Canvas作成
+            self.gomibako_canvas = tk.Canvas(self.root, width=200, height=200) # Canvas作成
             gomibako_image_tk  = tk.PhotoImage(file=self.GOMIBAKO_IMAGE, master=self.root) # ゴミ箱画像読み込み
             self.gomibako_canvas.place(x=720, y=670, anchor='center') # Canvas配置
             self.gomibako_canvas.create_image(0, 0, image=gomibako_image_tk, anchor='nw') # ImageTk画像配置
@@ -74,11 +74,11 @@ class ManageData:
             file_name = os.path.split(self.file)[1] # ファイル名を摘出
             self.file_label = tk.Label(self.root, text=file_name, font=("Helvetica", 40)) # ファイルラベルの設定
             self.file_label.place(x=720, y=300, anchor="center") # ファイルラベルの配置
-            self.yajirushi_canvas = tk.Canvas(self.root, width=200, height=300) # Canvasの作成
+            self.yajirushi_canvas = tk.Canvas(self.root, width=200, height=200) # Canvasの作成
             yajirushi_image_tk  = tk.PhotoImage(file=self.YAJIRUSHI_IMAGE, master=self.root) # 矢印画像読み込み
             self.yajirushi_canvas.place(x=720, y=480, anchor='center') # Canvasの配置
             self.yajirushi_canvas.create_image(0, 0, image=yajirushi_image_tk, anchor='nw') # ImageTk 画像配置
-            self.entry = tk.Entry(self.root, justify="center", width=15, font=("Helvetica", 40)) # 入力欄の作成
+            self.entry = tk.Entry(self.root, justify="center", width=15, font=("Helvetica", 40), disabledbackground="#ffffff", disabledforeground="#aa8713") # 入力欄の作成
             self.entry.place(x=720, y=670, anchor="center") # entryの配置
             self.extention_label = tk.Label(self.root, text=".npy", font=("Helvetica", 40)) # 拡張子ラベルの作成
             self.extention_label.place(x=940, y=670, anchor="center") # 拡張子ラベルの配置

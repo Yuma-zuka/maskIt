@@ -12,15 +12,15 @@ class ImageRecPro:
     # クラスファイルが作成されたときに定義するもの
     def __init__(self):
         # FaceDetectorYNの生成 顔を検出する器械の定義
-        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("/Users/yuma/opencv/yunet_n_640_640.onnx", "", (320, 320))
+        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
-        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/face_recognition_sface_2021dec.onnx", "")
+        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
         # 表示するための画像を一時的に保存するパス
-        self.TEMPORARY_SAVE_PATH = "/Users/yuma/opencv/recproApplication/completeImage/temporary_save_image.png"
+        self.TEMPORARY_SAVE_PATH = "completeImage/temporary_save_image.png"
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/completeImage"
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = "completeImage"
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/features"
+        self.FEATURES_DIRECTRY_PATH = "features"
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 

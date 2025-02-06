@@ -24,21 +24,21 @@ class RealTimeRec(tk.Frame):
         self.pack() # frameの組み込み
 
         # FaceDetectorYNの生成 顔を検出する器械の定義
-        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("/Users/yuma/opencv/recproApplication/onnx_file/yunet_n_640_640.onnx", "", (320, 320))
+        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
-        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("/Users/yuma/opencv/recproApplication/onnx_file/face_recognition_sface_2021dec.onnx", "")
+        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/completeImage"
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = "completeImage"
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = "/Users/yuma/opencv/recproApplication/features"
+        self.FEATURES_DIRECTRY_PATH = "features"
 
         # フィルター用の画像を読み込み
-        self.GLASSES_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/glasses.png")
-        self.GRASS_CROWN_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/grass_crown.png")
-        self.HEART_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/heart.png")
-        self.ROUND_IMAGE = cv2.imread("/Users/yuma/opencv/recproApplication/cover/round.png")
+        self.GLASSES_IMAGE = cv2.imread("cover/glasses.png")
+        self.GRASS_CROWN_IMAGE = cv2.imread("cover/grass_crown.png")
+        self.HEART_IMAGE = cv2.imread("cover/heart.png")
+        self.ROUND_IMAGE = cv2.imread("cover/round.png")
         self.ALL_FILTER_COUNT = max([e.value for e in Processing]) # フィルターの種類の最大値を定数として定義する
         self.deco = Processing.MOSAIC # 初期フィルターをモザイクに設定
 

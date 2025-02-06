@@ -8,13 +8,13 @@ from work_enum import Work
 class ManageData:
     def __init__(self):
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.DATA_DIRECTRY = os.path.expanduser("/Users/yuma/opencv/recproApplication/features")
+        self.DATA_DIRECTRY = os.path.expanduser("features")
         # 拡張子の限定
         self.DATA_EXTENTION = [("","*.npy")]
         # ゴミ箱の画像のパス
-        self.GOMIBAKO_IMAGE = "/Users/yuma/opencv/recproApplication/material/gomibako.png"
+        self.GOMIBAKO_IMAGE = "/material/gomibako.png"
         # 矢印の画像のパス
-        self.YAJIRUSHI_IMAGE = "/Users/yuma/opencv/recproApplication/material/yajirushi.png"
+        self.YAJIRUSHI_IMAGE = "material/yajirushi.png"
         # 変更か削除かの切り替えのための定義
         self.work = None
     

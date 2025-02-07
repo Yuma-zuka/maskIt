@@ -120,10 +120,27 @@ class Register:
         self.root.geometry("1440x847+0+0") # ウィンドウサイズ
         self.root.configure(bg="#f1f1f2") # ウィンドウの背景色
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
-        back_button = Button(self.root, text="戻る", bg="#969696",fg="#ffffff", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
-        back_button.place(x=30,y=740) # "戻る"ボタンの配置
-        retry = Button(self.root, text="続けて登録する", bg="#bbdceb", fg="#536f72", command=self.re_regist, font=("Helvetica", 50)) # 続けて登録するボタンの設定 re_registメソッドの呼び出し
-        retry.place(x=1020,y=740) # "続けて登録する"ボタンの配置
+
+        # 戻るボタンの画像を取得
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        # 続けて登録するボタンの画像を取得
+        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file="material/next.png")
+        
+        back_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
+        back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
+        back_button.create_image(0, 0, image=self.BACK_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
+        back_label = tk.Label(back_button, text="戻る", bg="#bcbabe", fg="#000000", font=("Helvetica", 54)) # 戻るボタンのラベルの設定
+        back_label.place(x=70, y=3) # "戻る"ボタンのラベルの配置
+        back_button.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        back_label.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        retry_button = tk.Canvas(self.root, width=450, height=70) # ボタンのキャンバスを作成
+        retry_button.place(x=1180, y=790, anchor="center") # "続けて登録する"ボタンの配置
+        retry_button.create_image(0, 0, image=self.RETRY_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
+        retry_label = tk.Label(retry_button, text="続けて編集する", bg="#bbdceb", fg="#536f72", font=("Helvetica", 54)) # 続けて登録するボタンのラベルの設定
+        retry_label.place(x=70, y=3) # "続けて登録する"ボタンのラベルの配置
+        retry_button.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し
+        retry_label.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し
+
         # 結果表示
         if error == None: # 検出できた時に検出した顔を枠で取って、名前をつけて表示する
             cv2.imwrite(self.TEMPORARY_SAVE_PATH, self.rec_image) # 一時的に書き出す
@@ -137,11 +154,11 @@ class Register:
             error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # エラーメッセージの配置
         self.root.mainloop() # ボタンの実行を待機
     # ホーム画面に戻るメソッド
-    def back_home(self):
+    def back_home(self, _):
         self.root.destroy()
         guihome_mac.HomeWindow()
     # 再び登録を続けるメソッド
-    def re_regist(self):
+    def re_regist(self, _):
         self.root.destroy()
         choice_rec_file.Choices(Work.REGISTER)
 

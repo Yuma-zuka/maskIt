@@ -26,10 +26,27 @@ class ManageData:
         self.root.title("manage") # ウィンドウ名
         self.root.geometry("1440x847+0+0") # ウィンドウサイズと位置
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
-        back_button = Button(self.root, text="戻る", bg="#969696",fg="#ffffff", command=self.back_home, font=("Helvetica", 50), relief="raised") # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
-        back_button.place(x=30,y=740) # "戻る"ボタンの配置
-        enter = Button(self.root, text="実行", bg="#f0cb45",fg="#ffffff", command=self.enter_changing, font=("Helvetica", 50), relief="raised") # 実行するボタンの設定 enter_changingメソッドの呼び出し
-        enter.place(x=1200,y=740) # "実行"ボタンの配置
+        
+        # 戻るボタンの画像を取得
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        # 実行するボタンの画像を取得
+        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file="material/process.png")
+        
+        back_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
+        back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
+        back_button.create_image(0, 0, image=self.BACK_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
+        back_label = tk.Label(back_button, text="戻る", bg="#bcbabe", fg="#000000", font=("Helvetica", 54)) # 戻るボタンのラベルの設定
+        back_label.place(x=70, y=3) # "戻る"ボタンのラベルの配置
+        back_button.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        back_label.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        retry_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
+        retry_button.place(x=1315, y=790, anchor="center") # "実行"ボタンの配置
+        retry_button.create_image(0, 0, image=self.RETRY_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
+        retry_label = tk.Label(retry_button, text="実行", bg="#f0cb45", fg="#ffffff", font=("Helvetica", 54)) # 実行するボタンのラベルの設定
+        retry_label.place(x=70, y=3) # "実行"ボタンのラベルの配置
+        retry_button.bind("<Button-1>", self.enter_changing) # enter_changingメソッドの呼び出し
+        retry_label.bind("<Button-1>", self.enter_changing) # enter_changingメソッドの呼び出し
+
         remove_button = Button(self.root, text="ファイルを削除", bg="#bbdceb", fg="#000000", command=self.remove_file, font=("Helvetica", 80), relief="raised") # ファイル削除ボタンの設定 remove_fileメソッドの呼び出し
         remove_button.place(x=80,y=50) # "ファイルを削除"ボタンの配置
         rename_button = Button(self.root, text="ファイル名変更", bg="#bbdceb", fg="#000000", command=self.rename_file, font=("Helvetica", 80), relief="raised") # ファイル名変更ボタンの設定 rename_fileメソッドの呼び出し
@@ -72,7 +89,7 @@ class ManageData:
 
         self.file = tkinter.filedialog.askopenfilename(filetypes = self.DATA_EXTENTION,initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
         if self.file != "": # 変更するファイルがあるならば
-            file_name = os.path.split(self.file)[1] # ファイル名を摘出
+            file_name = "変更前    " + os.path.split(self.file)[1] # ファイル名を摘出
             self.file_label = tk.Label(self.root, text=file_name, font=("Helvetica", 40)) # ファイルラベルの設定
             self.file_label.place(x=720, y=300, anchor="center") # ファイルラベルの配置
             self.yajirushi_canvas = tk.Canvas(self.root, width=200, height=200) # Canvasの作成
@@ -81,6 +98,8 @@ class ManageData:
             self.yajirushi_canvas.create_image(0, 0, image=yajirushi_image_tk, anchor='nw') # ImageTk 画像配置
             self.entry = tk.Entry(self.root, justify="center", width=15, font=("Helvetica", 40), disabledbackground="#ffffff", disabledforeground="#aa8713") # 入力欄の作成
             self.entry.place(x=720, y=670, anchor="center") # entryの配置
+            self.after_label = tk.Label(self.root, text="変更後", font=("Helvetica", 40)) # "変更後"ラベルの設定
+            self.after_label.place(x=440, y=670, anchor="center") # "変更後"ラベルの配置
             self.extention_label = tk.Label(self.root, text=".npy", font=("Helvetica", 40)) # 拡張子ラベルの作成
             self.extention_label.place(x=940, y=670, anchor="center") # 拡張子ラベルの配置
             self.work = Work.RENAME # この仕事はファイル変更の仕事だと定義する
@@ -93,7 +112,7 @@ class ManageData:
         return True # 英数字ならTrue
 
     # 実行ボタンを押したときのメソッド
-    def enter_changing(self):
+    def enter_changing(self, _):
         match self.work: # 働きでふるいにかける
             case Work.REMOVE: # 仕事が削除なら
                 for file in self.file: # ファイルの数だけ
@@ -106,6 +125,7 @@ class ManageData:
                 except:
                     pass
                 if self.is_ok(self.entry.get()): # isOkメソッドの呼び出し
+                    self.after_label.configure(text="変更済")
                     renamed_file_name = self.entry.get() # 変更後の名前を変数に代入
                     after_file_name = renamed_file_name + ".npy" # 変更後の名前からファイル名を作成
                     after_file_path = os.path.join(self.DATA_DIRECTRY, after_file_name) # ファイル名からパスを作成
@@ -118,7 +138,7 @@ class ManageData:
                     self.error_label.place(x=720, y=750, anchor="center") # errorラベルの配置
         self.file = "" # 入力ファイル変数の初期化
     # ホーム画面に戻るメソッド
-    def back_home(self):
+    def back_home(self, _):
         self.root.destroy()
         guihome_mac.HomeWindow()
 

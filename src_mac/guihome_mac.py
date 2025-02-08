@@ -1,4 +1,3 @@
-from tkmacosx import Button
 import tkinter as tk
 import choice_rec_file
 import real_time

@@ -3,7 +3,6 @@ import cv2
 import glob
 import os
 import tkinter as tk
-from tkmacosx import Button
 import guihome_mac
 import choice_rec_file
 from work_enum import Work

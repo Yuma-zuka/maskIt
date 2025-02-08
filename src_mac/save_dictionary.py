@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import tkinter as tk
-from tkmacosx import Button
 import os
 import glob
 import guihome_mac

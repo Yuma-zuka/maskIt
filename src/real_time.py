@@ -55,21 +55,29 @@ class RealTimeRec(tk.Frame):
             user_id = os.path.splitext(os.path.basename(file))[0] # face001.npy -> face001
             self.dictionary.append((user_id, feature))
 
+                # 戻るボタンの画像を取得
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+
         # ウィンドウの詳細
         self.canvas = tk.Canvas(self.master, width=1080, height=600)# Canvasの作成
         self.canvas.place(x=720, y=320, anchor="center") # Canvasを配置
-        back_button = tk.Button(self.master, text="戻る", command=self.back_home, font=("Helvetica", 50)) # ホームに戻るボタンの設定 back_homeメソッドの呼び出し
-        back_button.place(x=80,y=740, anchor="center") # "戻る"ボタンの配置
-        filter_change_button = tk.Button(self.master, text="フィルター変更", command=self.change_filter, font=("Helvetica", 50)) # フィルターを変更するボタンの設定 change_filterメソッドの呼び出し
-        filter_change_button.place(x=350, y=740, anchor="center") # "フィルター変更"ボタンの配置
+        back_button = tk.Canvas(self.master, width=180, height=70) # ボタンのキャンバスを作成
+        back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
+        back_button.create_image(0, 0, image=self.BACK_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
+        back_label = tk.Label(back_button, text="戻る", bg="#bcbabe", fg="#000000", font=("Helvetica", 54)) # 戻るボタンのラベルの設定
+        back_label.place(x=70, y=3) # "戻る"ボタンのラベルの配置
+        back_button.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        back_label.bind("<Button-1>", self.back_home) # back_homeメソッドの呼び出し
+        filter_change_button = tk.Button(self.master, text="フィルター変更", bg="#bbdceb", fg="#000000", command=self.change_filter, font=("Helvetica", 50)) # フィルターを変更するボタンの設定 change_filterメソッドの呼び出し
+        filter_change_button.place(x=450, y=700, anchor="center") # "フィルター変更"ボタンの配置
         self.filter_label = tk.Label(self.master, text="MOSAIC", font=("Helvetica", 50)) # フィルター名を表示するラベルの設定
-        self.filter_label.place(x=750, y=740, anchor="center") # ラベルの配置
+        self.filter_label.place(x=450, y=790, anchor="center") # ラベルの配置
         self.bool_check = tk.BooleanVar() # チェックボックスのオンオフのためにbooleanの宣言
         self.bool_check.set(True) # 初期状態をTrueにする
-        check_box = tk.Checkbutton(self.master, text="顔認証", variable=self.bool_check, font=("Helvetica", 50)) # 顔認証のチェックボタンの設定 
-        check_box.place(x=1040, y=740, anchor="center") # 顔認証チェックボタンの配置
-        photo_button = tk.Button(self.master, text="写真を撮る", command=self.take_picture, font=("Helvetica", 50)) # 写真を撮るボタンの設定 take_pictureメソッドの呼び出し
-        photo_button.place(x=1280, y=740, anchor="center") # フォトボタンの配置
+        check_box = tk.Checkbutton(self.master, text="顔認証", variable=self.bool_check, bg="#bbdceb", fg="#000000", font=("Helvetica", 50)) # 顔認証のチェックボタンの設定 
+        check_box.place(x=860, y=700, anchor="center") # 顔認証チェックボタンの配置
+        photo_button = tk.Button(self.master, text="写真を撮る", bg="#f0cb45", fg="#ffffff", command=self.take_picture, font=("Helvetica", 50)) # 写真を撮るボタンの設定 take_pictureメソッドの呼び出し
+        photo_button.place(x=1280, y=790, anchor="center") # フォトボタンの配置
         self.log_label = tk.Label(self.master, text="写真を保存しました", font=("Helvetica", 50)) # 保存を表示するラベルの設定
         self.log_label.place_forget() # 表示しないようにする
 
@@ -193,7 +201,7 @@ class RealTimeRec(tk.Frame):
             picture_path = os.path.join(self.COMPLETE_IMAGE_DIRECTRY_PATH, picture_file_name) # ファイル名からパスを作成する
             cv2.imwrite(picture_path, self.picture) # 画像を保存
             # 写真を撮ったと表示する
-            self.log_label.place(x=720, y=660, anchor="center")
+            self.log_label.place(x=1190, y=700, anchor="center")
             self.pop_count = 0
         except:
             pass

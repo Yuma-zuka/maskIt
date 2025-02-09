@@ -13,7 +13,7 @@ class HomeWindow:
         BUTTON_LABEL_FONT = ("Helvetica", 40) # ボタンの下のラベルのフォントとサイズ
         # ウィンドウの作成
         self.root = tk.Tk()
-        self.root.title("faceMozaicApp") # ウィンドウ名
+        self.root.title("maskIt") # ウィンドウ名
         self.root.geometry("1440x847+0+0") # ウィンドウサイズ
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
         self.root.configure(bg=BACKGROUND_COLOR) # ウィンドウの背景色
@@ -25,7 +25,7 @@ class HomeWindow:
         real_time_icon = tk.PhotoImage(file="material/realtime_icon.png")
 
         # タイトルラベル
-        title_label = tk.Label(self.root, text="アプリ名", font=TITLE_FONT, bg="#ffffff")
+        title_label = tk.Label(self.root, text="maskIt", font=TITLE_FONT, bg="#ffffff")
         title_label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
         # 顔データの登録を実行するボタンとラベル
         registration_process_btn = tk.Button(self.root, image=register_icon, command=self.do_registration_process) # do_registration_processメソッドの呼び出し

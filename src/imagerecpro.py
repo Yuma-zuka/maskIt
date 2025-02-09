@@ -15,6 +15,10 @@ class ImageRecPro:
         self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
         self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
+        # 上半身検出器の生成
+        self.upperbody_detector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_upperbody.xml")
+        self.hog = cv2.HOGDescriptor()
+        self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         # 表示するための画像を一時的に保存するパス
         self.TEMPORARY_SAVE_PATH = "completeImage/temporary_save_image.png"
         # 処理済の画像を保存するディレクトリのパス
@@ -42,7 +46,24 @@ class ImageRecPro:
         try:
             # 画像の読み込み
             self.image = cv2.imread(self.image_path)
-            # 画像サイズを設定する
+
+            # 全身検出
+            gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+            body_haar = self.upperbody_detector.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=5, minSize=(50, 50))
+            body_hog, _ = self.hog.detectMultiScale(self.image, winStride=(8, 8), padding=(8, 8), scale=1.05)
+            bodies = list(body_haar) + list(body_hog)
+            
+            for body in bodies: # 体の数だけ繰り返す
+                (x, y, w, h, *_) = map(int, body) # 体の範囲を抽出
+                body_image = self.image[y:y+h, x:x+w] # 体の範囲をくり抜く
+                # 検出器のサイズを設定する
+                self.FACE_DETECTOR.setInputSize((w, h))
+                # 顔検出
+                _, self.faces = self.FACE_DETECTOR.detect(body_image)
+                if self.faces is None: # 顔が検出できなかったら
+                    self.image = self.mosaic_area(self.image, x, y, w, h) # mosaic_areaメソッドの呼び出し
+            
+            # 検出器のサイズを設定する
             self.FACE_DETECTOR.setInputSize((self.image.shape[1], self.image.shape[0]))
             # 顔検出
             _, self.faces = self.FACE_DETECTOR.detect(self.image)

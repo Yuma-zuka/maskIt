@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import tkinter as tk
 import os
+import sys
 import glob
 import guihome_mac
 import choice_rec_file
@@ -9,14 +10,22 @@ from work_enum import Work
 
 class Register:
     def __init__(self):
+        if hasattr(sys, "_MEIPASS"):
+            self.base_path = sys._MEIPASS
+        else:
+            self.base_path = os.path.abspath(".")
+
+        detector_path = os.path.join(self.base_path, "onnx_file/yunet_n_640_640.onnx")
+        recognizer_path = os.path.join(self.base_path, "onnx_file/face_recognition_sface_2021dec.onnx")
+
         # FaceDetectorYNの生成 顔を検出する器械の定義
-        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
+        self.FACE_DETECTOR = cv2.FaceDetectorYN_create(detector_path, "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
-        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
-        # 表示するための画像を一時的に保存するパス
-        self.TEMPORARY_SAVE_PATH = "features/temporary_save_image.png"
-        # 特徴を抽出してできたデータファイルを保存するパス
-        self.FEATURES_DIRECTRY_PATH = "features"
+        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create(recognizer_path, "")
+        # 処理済の画像を保存するディレクトリのパス
+        self.TEMPORARY_SAVE_PATH = os.path.join(self.base_path, "features/temporary_save_image.png")
+        # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
+        self.FEATURES_DIRECTRY_PATH = os.path.join(self.base_path, "features")
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 
@@ -44,7 +53,7 @@ class Register:
                     elif len(faces) == 1:
                         save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
                     # ファイル名から、保存するパスを作成
-                    save_path = os.path.join(self.FEATURES_DIRECTRY_PATH, save_file_name)
+                    save_path = os.path.join("features", save_file_name)
                     # 特徴量を記述したファイルを保存
                     np.save(save_path, face_feature)
 
@@ -121,9 +130,9 @@ class Register:
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
 
         # 戻るボタンの画像を取得
-        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/back.png"))
         # 続けて登録するボタンの画像を取得
-        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file="material/next.png")
+        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/next.png"))
         
         back_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
         back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
@@ -135,7 +144,7 @@ class Register:
         retry_button = tk.Canvas(self.root, width=450, height=70) # ボタンのキャンバスを作成
         retry_button.place(x=1180, y=790, anchor="center") # "続けて登録する"ボタンの配置
         retry_button.create_image(0, 0, image=self.RETRY_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
-        retry_label = tk.Label(retry_button, text="続けて編集する", bg="#bbdceb", fg="#536f72", font=("Helvetica", 54)) # 続けて登録するボタンのラベルの設定
+        retry_label = tk.Label(retry_button, text="続けて登録する", bg="#bbdceb", fg="#536f72", font=("Helvetica", 54)) # 続けて登録するボタンのラベルの設定
         retry_label.place(x=70, y=3) # "続けて登録する"ボタンのラベルの配置
         retry_button.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し
         retry_label.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し

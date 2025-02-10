@@ -5,6 +5,7 @@ import cv2
 from PIL import Image, ImageTk, ImageOps
 import glob
 import os
+import sys
 import time
 import guihome_mac
 from processing_enum import Processing
@@ -24,22 +25,30 @@ class RealTimeRec(tk.Frame):
         super().__init__(master) # スーパークラスの継承
         self.pack() # frameの組み込み
 
+        if hasattr(sys, "_MEIPASS"):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+
+        detector_path = os.path.join(base_path, "onnx_file/yunet_n_640_640.onnx")
+        recognizer_path = os.path.join(base_path, "onnx_file/face_recognition_sface_2021dec.onnx")
+
         # FaceDetectorYNの生成 顔を検出する器械の定義
-        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
+        self.FACE_DETECTOR = cv2.FaceDetectorYN_create(detector_path, "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
-        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
+        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create(recognizer_path, "")
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = "completeImage"
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(base_path, "completeImage")
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = "features"
+        self.FEATURES_DIRECTRY_PATH = os.path.join(base_path, "features")
 
         # フィルター用の画像を読み込み
-        self.GLASSES_IMAGE = cv2.imread("cover/glasses.png")
-        self.GRASS_CROWN_IMAGE = cv2.imread("cover/grass_crown.png")
-        self.HEART_IMAGE = cv2.imread("cover/heart.png")
-        self.ROUND_IMAGE = cv2.imread("cover/round.png")
+        self.GLASSES_IMAGE = cv2.imread(os.path.join(base_path, "cover/glasses.png"))
+        self.GRASS_CROWN_IMAGE = cv2.imread(os.path.join(base_path, "cover/grass_crown.png"))
+        self.HEART_IMAGE = cv2.imread(os.path.join(base_path, "cover/heart.png"))
+        self.ROUND_IMAGE = cv2.imread(os.path.join(base_path, "cover/round.png"))
         self.ALL_FILTER_COUNT = max([e.value for e in Processing]) # フィルターの種類の最大値を定数として定義する
         self.deco = Processing.MOSAIC # 初期フィルターをモザイクに設定
 
@@ -57,7 +66,7 @@ class RealTimeRec(tk.Frame):
             self.dictionary.append((user_id, feature))
 
         # 戻るボタンの画像を取得
-        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(base_path, "material/back.png"))
 
         # ウィンドウの詳細
         self.canvas = tk.Canvas(self.master, width=1080, height=600)# Canvasの作成
@@ -82,10 +91,17 @@ class RealTimeRec(tk.Frame):
         self.log_label = tk.Label(self.master, text="写真を保存しました", font=("Helvetica", 50)) # 保存を表示するラベルの設定
         self.log_label.place_forget() # 表示しないようにする
 
-        # カメラをオープンする
-        self.capture = cv2.VideoCapture(0)
-        # 画面に表示する
-        self.disp_image() # disp_imageメソッドの呼び出し
+        try:
+            # カメラをオープンする
+            self.capture = cv2.VideoCapture(0)
+            if not self.capture.isOpened():
+                errorlabel = tk.Message(self.master, text="camera_error")
+                errorlabel.pack()
+            # 画面に表示する
+            self.disp_image() # disp_imageメソッドの呼び出し
+        except Exception as e:
+            errorlabel = tk.Message(self.master, text=f"Exception occurrd: {e}")
+            errorlabel.pack()
 
     # 画像を表示するメソッド
     def disp_image(self):
@@ -188,7 +204,7 @@ class RealTimeRec(tk.Frame):
         return cv2.resize(small, src.shape[:2][::-1], interpolation=cv2.INTER_NEAREST) # 元のサイズに戻して返す 補間でノイズ除去
 
     # ホーム画面に戻るメソッド
-    def back_home(self):
+    def back_home(self, _):
         self.master.destroy()
         self.capture.release()
         guihome_mac.HomeWindow()

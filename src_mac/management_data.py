@@ -2,20 +2,26 @@ import tkinter as tk
 from tkmacosx import Button
 import tkinter.filedialog, tkinter.messagebox
 import os
+import sys
 import guihome_mac 
 from work_enum import Work 
 
 # 登録してあるデータファイルを管理するクラス
 class ManageData:
     def __init__(self):
+        if hasattr(sys, "_MEIPASS"):
+            self.base_path = sys._MEIPASS
+        else:
+            self.base_path = os.path.abspath(".")
+
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.DATA_DIRECTRY = os.path.expanduser("features")
+        self.DATA_DIRECTRY = os.path.expanduser(os.path.join(self.base_path, "features"))
         # 拡張子の限定
         self.DATA_EXTENTION = [("","*.npy")]
         # ゴミ箱の画像のパス
-        self.GOMIBAKO_IMAGE = "material/gomibako.png"
+        self.GOMIBAKO_IMAGE = os.path.expanduser(os.path.join(self.base_path, "material/gomibako.png"))
         # 矢印の画像のパス
-        self.YAJIRUSHI_IMAGE = "material/yajirushi.png"
+        self.YAJIRUSHI_IMAGE = os.path.expanduser(os.path.join(self.base_path, "material/yajirushi.png"))
         # 変更か削除かの切り替えのための定義
         self.work = None
     
@@ -28,9 +34,9 @@ class ManageData:
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
         
         # 戻るボタンの画像を取得
-        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/back.png"))
         # 実行するボタンの画像を取得
-        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file="material/process.png")
+        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/process.png"))
         
         back_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
         back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
@@ -150,6 +156,7 @@ class ManageData:
         except:
             pass
         try:
+            self.after_label.destroy()
             self.entry.destroy() # 入力の削除
             self.yajirushi_canvas.destroy() # 画像の削除
             self.extention_label.destroy() # 拡張子ラベルの削除

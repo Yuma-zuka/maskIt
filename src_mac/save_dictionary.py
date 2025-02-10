@@ -24,8 +24,12 @@ class Register:
         self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create(recognizer_path, "")
         # 処理済の画像を保存するディレクトリのパス
         self.TEMPORARY_SAVE_PATH = os.path.join(self.base_path, "features/temporary_save_image.png")
+        # 完成したファイルを保存するディレクトリー
+        self.APP_SUPPORT_DIR = os.path.expanduser("~/Ducoments/maskIt/")
+        os.makedirs(self.APP_SUPPORT_DIR, exist_ok=True)  # ディレクトリがなければ作成
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = os.path.join(self.base_path, "features")
+        self.FEATURES_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "features")
+        os.makedirs(self.FEATURES_DIRECTRY_PATH, exist_ok=True)  # ディレクトリがなければ作成
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 

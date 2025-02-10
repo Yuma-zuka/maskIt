@@ -30,12 +30,15 @@ class ImageRecPro:
         self.UPPERBODY_DETECTOR = cv2.CascadeClassifier(body_detector_path)
         self.hog = cv2.HOGDescriptor()
         self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+        # 完成したファイルを保存するディレクトリー
+        self.APP_SUPPORT_DIR = os.path.expanduser("~/Documents/maskIt/")
+        os.makedirs(self.APP_SUPPORT_DIR, exist_ok=True)  # ディレクトリがなければ作成
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(self.base_path, "completeImage")
-        # 処理済の画像を保存するディレクトリのパス
-        self.TEMPORARY_SAVE_PATH = os.path.join(self.base_path, "completeImage/temporary_save_image.png")
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "completeImage")
+        os.makedirs(self.COMPLETE_IMAGE_DIRECTRY_PATH, exist_ok=True)  # ディレクトリがなければ作成
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = os.path.join(self.base_path, "features")
+        self.FEATURES_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "features")
+        os.makedirs(self.FEATURES_DIRECTRY_PATH, exist_ok=True)  # ディレクトリがなければ作成
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 

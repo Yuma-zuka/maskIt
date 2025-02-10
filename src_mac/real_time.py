@@ -39,10 +39,15 @@ class RealTimeRec(tk.Frame):
         self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create(recognizer_path, "")
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
+        # 完成したファイルを保存するディレクトリー
+        self.APP_SUPPORT_DIR = os.path.expanduser("~/Documents/maskIt")
+        os.makedirs(self.APP_SUPPORT_DIR, exist_ok=True)  # ディレクトリがなければ作成
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(base_path, "completeImage")
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "completeImage")
+        os.makedirs(self.COMPLETE_IMAGE_DIRECTRY_PATH, exist_ok=True)  # ディレクトリがなければ作成
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = os.path.join(base_path, "features")
+        self.FEATURES_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "features")
+        os.makedirs(self.FEATURES_DIRECTRY_PATH, exist_ok=True)  # ディレクトリがなければ作成
 
         # フィルター用の画像を読み込み
         self.GLASSES_IMAGE = cv2.imread(os.path.join(base_path, "cover/glasses.png"))

@@ -94,7 +94,7 @@ class ManageData:
     def rename_file(self):
         self.remove_item() # remove_itemメソッドの呼び出し
 
-        self.file = tkinter.filedialog.askopenfilename(filetypes = self.DATA_EXTENTION, initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
+        self.file = tkinter.filedialog.askopenfilename(filetypes = self.DATA_EXTENTION, initialdir = self.DATA_DIRECTRY) # 変更するファイルを尋ねる
         if self.file != "": # 変更するファイルがあるならば
             file_name = "変更前    " + os.path.split(self.file)[1] # ファイル名を摘出
             self.file_label = tk.Label(self.root, text=file_name, font=("Helvetica", 40)) # ファイルラベルの設定
@@ -140,10 +140,10 @@ class ManageData:
                     self.file_label.destroy() # ラベルを削除
                     self.entry.configure(state="disabled") # entryを入力不可能にする
                     self.work = None # 仕事を何もしていない状況と定義する
+                    self.file = "" # 入力ファイル変数の初期化
                 else: # entryの入力が半角英数字でなかったとき
                     self.error_label = tk.Label(self.root, fg="#ff0000", text="※半角英数字で入力", font=("Helvetica", 40)) # errorラベルの設定
                     self.error_label.place(x=720, y=750, anchor="center") # errorラベルの配置
-        self.file = "" # 入力ファイル変数の初期化
     # ホーム画面に戻るメソッド
     def back_home(self, _):
         self.root.destroy()
@@ -157,7 +157,7 @@ class ManageData:
         except:
             pass
         try:
-            self.after_label.destroy()
+            self.after_label.destroy() # 変更ラベルの削除
             self.entry.destroy() # 入力の削除
             self.yajirushi_canvas.destroy() # 画像の削除
             self.extention_label.destroy() # 拡張子ラベルの削除

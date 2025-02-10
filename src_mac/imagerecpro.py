@@ -4,7 +4,7 @@ import glob
 import os
 import sys
 import tkinter as tk
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk
 import guihome_mac
 import choice_rec_file
 from work_enum import Work

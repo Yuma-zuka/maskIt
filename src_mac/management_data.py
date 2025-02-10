@@ -15,7 +15,8 @@ class ManageData:
             self.base_path = os.path.abspath(".")
 
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.DATA_DIRECTRY = os.path.expanduser(os.path.join(self.base_path, "features"))
+        
+        self.DATA_DIRECTRY = os.path.expanduser("~/Documents/maskIt/features/")
         # 拡張子の限定
         self.DATA_EXTENTION = [("","*.npy")]
         # ゴミ箱の画像のパス
@@ -65,7 +66,7 @@ class ManageData:
         self.remove_item() # remove_itemメソッドの呼び出し
 
         message_files = "" # メッセージを定義
-        self.file = tkinter.filedialog.askopenfilenames(filetypes = self.DATA_EXTENTION,initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
+        self.file = tkinter.filedialog.askopenfilenames(filetypes = self.DATA_EXTENTION, initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
         remainder = len(self.file) - 10 # 10を超えた分のファイル数(あまり)を出す 10以下の場合はこの変数は使用しない
         file_count = 0 # 繋げたファイルの数を数えるために変数を定義
         for remove_file in self.file: # ファイルの数だけ繰り返す
@@ -93,7 +94,7 @@ class ManageData:
     def rename_file(self):
         self.remove_item() # remove_itemメソッドの呼び出し
 
-        self.file = tkinter.filedialog.askopenfilename(filetypes = self.DATA_EXTENTION,initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
+        self.file = tkinter.filedialog.askopenfilename(filetypes = self.DATA_EXTENTION, initialdir = self.DATA_DIRECTRY) # 消去するファイルを尋ねる
         if self.file != "": # 変更するファイルがあるならば
             file_name = "変更前    " + os.path.split(self.file)[1] # ファイル名を摘出
             self.file_label = tk.Label(self.root, text=file_name, font=("Helvetica", 40)) # ファイルラベルの設定

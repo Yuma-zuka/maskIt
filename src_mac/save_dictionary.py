@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import tkinter as tk
+from PIL import Image, ImageTk, ImageOps
 import os
 import sys
 import glob
@@ -25,7 +26,7 @@ class Register:
         # 処理済の画像を保存するディレクトリのパス
         self.TEMPORARY_SAVE_PATH = os.path.join(self.base_path, "features/temporary_save_image.png")
         # 完成したファイルを保存するディレクトリー
-        self.APP_SUPPORT_DIR = os.path.expanduser("~/Ducoments/maskIt/")
+        self.APP_SUPPORT_DIR = os.path.expanduser("~/Documents/maskIt/")
         os.makedirs(self.APP_SUPPORT_DIR, exist_ok=True)  # ディレクトリがなければ作成
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
         self.FEATURES_DIRECTRY_PATH = os.path.join(self.APP_SUPPORT_DIR, "features")
@@ -57,7 +58,7 @@ class Register:
                     elif len(faces) == 1:
                         save_file_name = str(os.path.splitext(os.path.basename(image_path))[0]) + ".npy"
                     # ファイル名から、保存するパスを作成
-                    save_path = os.path.join("features", save_file_name)
+                    save_path = os.path.join(self.FEATURES_DIRECTRY_PATH, save_file_name)
                     # 特徴量を記述したファイルを保存
                     np.save(save_path, face_feature)
 
@@ -85,6 +86,7 @@ class Register:
                     if menbers == len(faces):
                         self.rec_image = self.resize_image(self.rec_image) # resize_imageメソッドの呼び出し
                         self.make_result_window(None) # make_result_windowメソッドの呼び出し
+                        break
             except:
                 self.make_result_window("顔を検出できませんでした") # make_result_windowメソッドの呼び出し
         except:
@@ -155,12 +157,14 @@ class Register:
 
         # 結果表示
         if error == None: # 検出できた時に検出した顔を枠で取って、名前をつけて表示する
-            cv2.imwrite(self.TEMPORARY_SAVE_PATH, self.rec_image) # 一時的に書き出す
-            image_tk  = tk.PhotoImage(file=self.TEMPORARY_SAVE_PATH, master=self.root) # 書き出したファイルをtkinterで読み込む
+            # BGR→RGB変換
+            cv_image = cv2.cvtColor(self.rec_image, cv2.COLOR_BGR2RGB)
+            # NumPyのndarrayからPillowのImageへ変換
+            pil_image = Image.fromarray(cv_image)
+            image_tk  = ImageTk.PhotoImage(image=pil_image, master=self.root) # 書き出したファイルをtkinterで読み込む
             canvas = tk.Canvas(self.root, width=self.rec_image.shape[1], height=self.rec_image.shape[0]) # Canvas作成
             canvas.place(x=720, y=380, anchor='center') # Canvas配置
-            canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
-            os.remove(self.TEMPORARY_SAVE_PATH) # 一時的に書き出したファイルを削除 
+            canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置 
         else: # errorがあった時 エラー文の表示
             error_message = tk.Label(self.root, text=error, font=("Helvetica", 60)) # エラーメッセージのラベル設定
             error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # エラーメッセージの配置

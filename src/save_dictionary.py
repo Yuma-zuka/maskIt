@@ -135,7 +135,7 @@ class Register:
         retry_button = tk.Canvas(self.root, width=450, height=70) # ボタンのキャンバスを作成
         retry_button.place(x=1180, y=790, anchor="center") # "続けて登録する"ボタンの配置
         retry_button.create_image(0, 0, image=self.RETRY_BUTTON_IMAGE, anchor="nw") # イメージの貼り付け
-        retry_label = tk.Label(retry_button, text="続けて編集する", bg="#bbdceb", fg="#536f72", font=("Helvetica", 54)) # 続けて登録するボタンのラベルの設定
+        retry_label = tk.Label(retry_button, text="続けて登録する", bg="#bbdceb", fg="#536f72", font=("Helvetica", 54)) # 続けて登録するボタンのラベルの設定
         retry_label.place(x=70, y=3) # "続けて登録する"ボタンのラベルの配置
         retry_button.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し
         retry_label.bind("<Button-1>", self.re_regist) # re_registメソッドの呼び出し

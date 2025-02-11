@@ -5,6 +5,7 @@ import os
 import sys
 import tkinter as tk
 from PIL import Image, ImageTk
+from pillow_heif import register_heif_opener
 import guihome_mac
 import choice_rec_file
 from work_enum import Work
@@ -59,13 +60,22 @@ class ImageRecPro:
 
         try:
             # 画像の読み込み
-            self.image = cv2.imread(self.image_path)
+            register_heif_opener() # HEIF画像を読み込み可能にする
+            read_pil_img = Image.open(self.image_path) # Pillow で画像を開く
+            icc_profile = read_pil_img.info.get("icc_profile") # 画像の ICC プロファイルを取得
+            if not icc_profile:
+                self.image = cv2.imread(self.image_path) # 画像を読み込む
+            else:
+                del read_pil_img.info["icc_profile"] # iccプロファイルを削除
+                self.image = cv2.cvtColor(np.array(read_pil_img), cv2.COLOR_RGB2BGR) # RGBからBGRに変更
+            self.image = self.resize_image(self.image) # resize_imageメソッドの呼び出し
 
             # 全身検出
             gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
             body_haar = self.UPPERBODY_DETECTOR.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=5, minSize=(50, 50))
             body_hog, _ = self.hog.detectMultiScale(self.image, winStride=(8, 8), padding=(8, 8), scale=1.05)
             bodies = list(body_haar) + list(body_hog)
+            bodies = bodies if bodies is not None else [] # Noneだったら空リストを送る
             
             for body in bodies: # 体の数だけ繰り返す
                 (x, y, w, h, *_) = map(int, body) # 体の範囲を抽出
@@ -81,7 +91,7 @@ class ImageRecPro:
             self.FACE_DETECTOR.setInputSize((self.image.shape[1], self.image.shape[0]))
             # 顔検出
             _, self.faces = self.FACE_DETECTOR.detect(self.image)
-            self.faces = self.faces if self.faces is not None else []
+            self.faces = self.faces if self.faces is not None else [] # Noneだったら空リストを送る
             for face in self.faces: # 検出した顔を一つずつ実行
                 # 顔の特徴を抽出
                 aligned_face=self.FACE_RECOGNIZER.alignCrop(self.image, face)
@@ -96,8 +106,8 @@ class ImageRecPro:
 
             # 画像の保存
             cv2.imwrite(self.save_path, self.image)
-            # 保存する画像を表示するために表示サイズに加工する
-            self.show_image = self.resize_image(self.image) # resize_imageメソッドの呼び出し
+            # 保存する画像を表示するためにべつの変数に代入する
+            self.show_image = self.image
             # 画像の表示
             self.make_result_window(None) # make_result_windowメソッドの呼び出し
         except:

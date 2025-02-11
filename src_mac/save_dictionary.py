@@ -1,7 +1,8 @@
 import numpy as np
 import cv2
 import tkinter as tk
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk
+from pillow_heif import register_heif_opener
 import os
 import sys
 import glob
@@ -37,13 +38,22 @@ class Register:
     # 画像のから顔を取得して特徴を抽出。そして、それを記録するメソッド
     def rec_save(self, image_path):
         try:
-            self.rec_image = cv2.imread(image_path) # 画像を読み込む
+            register_heif_opener() # HEIF画像を読み込み可能にする
+            read_pil_img = Image.open(image_path) # Pillow で画像を開く
+            icc_profile = read_pil_img.info.get("icc_profile") # 画像の ICC プロファイルを取得
+            if not icc_profile:
+                self.rec_image = cv2.imread(image_path) # 画像を読み込む
+            else:
+                del read_pil_img.info["icc_profile"] # iccプロファイルを削除
+                self.rec_image = cv2.cvtColor(np.array(read_pil_img), cv2.COLOR_RGB2BGR) # RGBからBGRに変更
+            self.rec_image = self.resize_image(self.rec_image) # resize_imageメソッドの呼び出し
             height, width, _ = self.rec_image.shape # 画像サイズの取得
             self.FACE_DETECTOR.setInputSize((width, height)) # 画像サイズの設定
             try:
                 # 顔を検出する
                 _, faces = self.FACE_DETECTOR.detect(self.rec_image)
                 menbers = 0 # 何人目の処理かをカウントするために変数を作成
+                faces = faces if faces is not None else [] # Noneだったら空リストを送る
                 # 顔の数だけ繰り返す
                 for face in faces:
                     # 顔を切り抜き特徴を抽出する
@@ -84,7 +94,6 @@ class Register:
                     scale = 0.6 # 文字サイズの倍率
                     cv2.putText(self.rec_image, id, position, font, scale, color, thickness, cv2.LINE_AA) # 文字の書き込み
                     if menbers == len(faces):
-                        self.rec_image = self.resize_image(self.rec_image) # resize_imageメソッドの呼び出し
                         self.make_result_window(None) # make_result_windowメソッドの呼び出し
                         break
             except:

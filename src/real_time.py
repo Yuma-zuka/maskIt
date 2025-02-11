@@ -187,7 +187,7 @@ class RealTimeRec(tk.Frame):
         return cv2.resize(small, src.shape[:2][::-1], interpolation=cv2.INTER_NEAREST) # 元のサイズに戻して返す 補間でノイズ除去
 
     # ホーム画面に戻るメソッド
-    def back_home(self):
+    def back_home(self, _):
         self.master.destroy()
         self.capture.release()
         guihome.HomeWindow()

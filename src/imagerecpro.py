@@ -2,7 +2,9 @@ import numpy as np
 import cv2
 import glob
 import os
+import sys
 import tkinter as tk
+from PIL import Image, ImageTk
 import guihome
 import choice_rec_file
 from work_enum import Work
@@ -11,20 +13,27 @@ from work_enum import Work
 class ImageRecPro:
     # クラスファイルが作成されたときに定義するもの
     def __init__(self):
+        if hasattr(sys, "_MEIPASS"):
+            self.base_path = sys._MEIPASS
+        else:
+            self.base_path = os.path.abspath(".")
+        detector_path = os.path.join(self.base_path, "onnx_file/yunet_n_640_640.onnx")
+        recognizer_path = os.path.join(self.base_path, "onnx_file/face_recognition_sface_2021dec.onnx")
+        body_detector_path = os.path.join(self.base_path, "onnx_file/haarcascade_frontalface_default.xml")
+
         # FaceDetectorYNの生成 顔を検出する器械の定義
-        self.FACE_DETECTOR = cv2.FaceDetectorYN_create("onnx_file/yunet_n_640_640.onnx", "", (320, 320))
+        self.FACE_DETECTOR = cv2.FaceDetectorYN_create(detector_path, "", (320, 320))
         # FaceRecognizerの生成 顔を認識するためのサンプル
-        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create("onnx_file/face_recognition_sface_2021dec.onnx", "")
-        # 上半身検出器の生成
-        self.upperbody_detector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_upperbody.xml")
+        self.FACE_RECOGNIZER = cv2.FaceRecognizerSF_create(recognizer_path, "")
+        # 全身検出器の生成
+        self.UPPERBODY_DETECTOR = cv2.CascadeClassifier(body_detector_path)
         self.hog = cv2.HOGDescriptor()
         self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-        # 表示するための画像を一時的に保存するパス
-        self.TEMPORARY_SAVE_PATH = "completeImage/temporary_save_image.png"
+
         # 処理済の画像を保存するディレクトリのパス
-        self.COMPLETE_IMAGE_DIRECTRY_PATH = "completeImage"
+        self.COMPLETE_IMAGE_DIRECTRY_PATH = os.path.join(self.base_path, "completeImage")
         # 特徴を抽出してできたデータファイルを保存するディレクトリのパス
-        self.FEATURES_DIRECTRY_PATH = "features"
+        self.FEATURES_DIRECTRY_PATH = os.path.join(self.base_path, "features")
         # 顔認証の一致率の定義>>この値を超えると一致とみなす
         self.COSINE_THRESHOLD = 0.363
 
@@ -49,7 +58,7 @@ class ImageRecPro:
 
             # 全身検出
             gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-            body_haar = self.upperbody_detector.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=5, minSize=(50, 50))
+            body_haar = self.UPPERBODY_DETECTOR.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=5, minSize=(50, 50))
             body_hog, _ = self.hog.detectMultiScale(self.image, winStride=(8, 8), padding=(8, 8), scale=1.05)
             bodies = list(body_haar) + list(body_hog)
             
@@ -85,8 +94,6 @@ class ImageRecPro:
             cv2.imwrite(self.save_path, self.image)
             # 保存する画像を表示するために表示サイズに加工する
             self.show_image = self.resize_image(self.image) # resize_imageメソッドの呼び出し
-            # 画像を表示するために一時的に書き出す
-            cv2.imwrite(self.TEMPORARY_SAVE_PATH, self.show_image)
             # 画像の表示
             self.make_result_window(None) # make_result_windowメソッドの呼び出し
         except:
@@ -139,9 +146,9 @@ class ImageRecPro:
         self.root.resizable(False, False) # ウィンドウのサイズを変化できないように設定
 
         # 戻るボタンの画像を取得
-        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file="material/back.png")
+        self.BACK_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/back.png"))
         # 続けて実行するボタンの画像を取得
-        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file="material/next.png")
+        self.RETRY_BUTTON_IMAGE = tk.PhotoImage(file=os.path.join(self.base_path, "material/next.png"))
 
         back_button = tk.Canvas(self.root, width=180, height=70) # ボタンのキャンバスを作成
         back_button.place(x=120, y=790, anchor="center") # "戻る"ボタンの配置
@@ -160,11 +167,16 @@ class ImageRecPro:
 
         # 結果表示
         if error == None: # errorがなかった時 画像表示
-            image_tk  = tk.PhotoImage(file=self.TEMPORARY_SAVE_PATH, master=self.root) # 表示する画像の取得
+            # ウィンドウに表示するための準備
             canvas = tk.Canvas(self.root, width=self.show_image.shape[1], height=self.show_image.shape[0]) # Canvas作成
             canvas.place(x=720, y=380, anchor='center') # Canvas配置
+            # BGR→RGB変換
+            cv_image = cv2.cvtColor(self.show_image, cv2.COLOR_BGR2RGB)
+            # NumPyのndarrayからPillowのImageへ変換
+            pil_image = Image.fromarray(cv_image)
+            # PIL.ImageからPhotoImageへ変換する
+            image_tk = ImageTk.PhotoImage(image=pil_image, master=self.root)
             canvas.create_image(0, 0, image=image_tk, anchor='nw') # ImageTk 画像配置
-            os.remove(self.TEMPORARY_SAVE_PATH) # 一時的に保存していた画像の削除
         else: # errorがあった時 エラー文の表示
             error_message = tk.Label(self.root, text=error, font=("Helvetica", 60)) # エラーメッセージのラベル設定
             error_message.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # エラーメッセージの配置

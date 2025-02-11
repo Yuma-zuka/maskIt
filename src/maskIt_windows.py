@@ -1,0 +1,4 @@
+import guihome
+
+guihome.HomeWindow()
+

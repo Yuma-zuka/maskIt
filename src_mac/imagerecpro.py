@@ -60,8 +60,6 @@ class ImageRecPro:
         try:
             # 画像の読み込み
             self.image = cv2.imread(self.image_path)
-            # 画像サイズを設定する
-            self.FACE_DETECTOR.setInputSize((self.image.shape[1], self.image.shape[0]))
 
             # 全身検出
             gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)

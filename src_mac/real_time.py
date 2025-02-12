@@ -138,6 +138,12 @@ class RealTimeRec(tk.Frame):
                 w = 1280 - x
             if y + h > 720:
                 h = 720 - y
+            if x < 0:
+                w = w + x
+                x = 0
+            if y < 0:
+                h = h + y
+                y = 0
 
             # フィルターをかける
             if (result != True):
